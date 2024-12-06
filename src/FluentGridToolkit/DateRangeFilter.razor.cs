@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
+using Microsoft.FluentUI.AspNetCore.Components.DesignTokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,14 @@ namespace FluentGridToolkit
     /// <summary>
     /// A Blazor component that provides a user interface for filtering data by a date range.
     /// </summary>
-    public partial class DateRangeFilter<TGridItem> : FluentComponentBase
+    public partial class DateRangeFilter<TGridItem, TProp> : FluentComponentBase
     {
+
+        /// <summary>
+        /// Gets the filter expression
+        /// </summary>
+        public Expression<Func<TGridItem, bool>> FilterExpression { get; private set; } = default!;
+
         /// <summary>
         /// Gets or sets the name of the column to which the filter is applied
         /// </summary>
@@ -21,10 +28,10 @@ namespace FluentGridToolkit
         public required string ColumnName { get; set; }
 
         /// <summary>
-        /// Gets or sets the lambda filter expression for the item
+        /// Defines the value to be used in the fiter expression
         /// </summary>
-        [Parameter]
-        public required Expression<Func<TGridItem, bool>> FilterExpression { get; set; }
+        [Parameter, EditorRequired]
+        public Expression<Func<TGridItem, TProp>> Property { get; set; } = default!;
 
         /// <summary>
         /// Gets or sets the start date of the date range filter.
@@ -141,6 +148,38 @@ namespace FluentGridToolkit
             if (OnClearClicked.HasDelegate)
                 await OnClearClicked.InvokeAsync();
         }
+
+        /// <summary>
+        /// Generates the expression: this.StartDate > AccountCreatedDate && this.EndDate <= AccountCreatedDate.
+        /// </summary>
+        /// <returns>The generated expression.</returns>
+        /// <exception cref="InvalidOperationException">Thrown if Property is not set.</exception>
+        private Expression<Func<TGridItem, bool>> CreateExpression()
+        {
+            if (Property == null)
+                throw new InvalidOperationException("The Property expression must be set before creating a comparison expression.");
+
+            // Access the property on the entity
+            var parameter = Expression.Parameter(typeof(TGridItem));
+            var propertyAccess = Expression.Invoke(Property, parameter);
+
+            // Convert Nullable<DateTime> to DateTime for comparisons if necessary
+            //var propertyValue = typeof(TProp) == typeof(DateTime?)
+            //    ? Expression.Property(propertyAccess, "Value")
+            //    : propertyAccess;
+            var propertyValue = propertyAccess;
+
+            // Build the expressions for StartDate and EndDate comparisons
+            var startComparison = Expression.GreaterThan(propertyValue, Expression.Constant(StartDate));
+            var endComparison = Expression.LessThanOrEqual(propertyValue, Expression.Constant(EndDate));
+
+            // Combine expressions with && (AND)
+            var body = Expression.AndAlso(startComparison, endComparison);
+
+            // Return the complete lambda expression
+            return Expression.Lambda<Func<TGridItem, bool>>(body, parameter);
+        }
+
     }
 
 }
