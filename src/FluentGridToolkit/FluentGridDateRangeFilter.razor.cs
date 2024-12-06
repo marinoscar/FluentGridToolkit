@@ -13,7 +13,7 @@ namespace FluentGridToolkit
     /// <summary>
     /// A Blazor component that provides a user interface for filtering data by a date range.
     /// </summary>
-    public partial class DateRangeFilter<TGridItem, TProp> : FilterComponentBase<TGridItem, TProp>
+    public partial class FluentGridDateRangeFilter<TGridItem, TProp> : FluentGridFilterBase<TGridItem, TProp>
     {
 
         /// <summary>
@@ -87,27 +87,6 @@ namespace FluentGridToolkit
         /// </summary>
         [Parameter]
         public string ClearButtonTooltip { get; set; } = "Clear Filters";
-
-        /// <summary>
-        /// Event callback invoked when the search button is clicked.
-        /// </summary>
-        /// <remarks>
-        /// The callback provides a tuple containing the <see cref="StartDate"/> and <see cref="EndDate"/> as parameters.
-        /// </remarks>
-        [Parameter]
-        public EventCallback<(DateTime? Start, DateTime? End)> OnSearchClicked { get; set; }
-
-        /// <summary>
-        /// Event callback invoked when the clear button is clicked.
-        /// </summary>
-        [Parameter]
-        public EventCallback OnClearClicked { get; set; }
-
-        /// <summary>
-        /// Event callback when the filter expression has changed
-        /// </summary>
-        [Parameter]
-        public EventCallback OnValueChanged { get; set; }
 
         /// <summary>
         /// Handles the search button click event.

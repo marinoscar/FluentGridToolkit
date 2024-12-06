@@ -4,13 +4,13 @@ namespace FluentGridToolkit.Tests
 {
     public class GridFilterManagerTests
     {
-        private IQueryable<TestEntity> GetTestEntities()
+        private IQueryable<FilterManagerTestEntity> GetTestEntities()
         {
-            return new List<TestEntity>
+            return new List<FilterManagerTestEntity>
         {
-            new TestEntity { Id = 1, Name = "Alice", Age = 25, CreatedDate = new DateTime(2023, 1, 1) },
-            new TestEntity { Id = 2, Name = "Bob", Age = 30, CreatedDate = new DateTime(2023, 5, 15) },
-            new TestEntity { Id = 3, Name = "Charlie", Age = 35, CreatedDate = new DateTime(2024, 1, 1) }
+            new FilterManagerTestEntity { Id = 1, Name = "Alice", Age = 25, CreatedDate = new DateTime(2023, 1, 1) },
+            new FilterManagerTestEntity { Id = 2, Name = "Bob", Age = 30, CreatedDate = new DateTime(2023, 5, 15) },
+            new FilterManagerTestEntity { Id = 3, Name = "Charlie", Age = 35, CreatedDate = new DateTime(2024, 1, 1) }
         }.AsQueryable();
         }
 
@@ -18,14 +18,14 @@ namespace FluentGridToolkit.Tests
         public void Constructor_NullBaseQuery_ThrowsArgumentNullException()
         {
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => new GridFilterManager<TestEntity>(null));
+            Assert.Throws<ArgumentNullException>(() => new FluentGridFilterManager<FilterManagerTestEntity>(null));
         }
 
         [Fact]
         public void AddOrUpdateFilter_NullColumn_ThrowsArgumentNullException()
         {
             // Arrange
-            var manager = new GridFilterManager<TestEntity>(GetTestEntities());
+            var manager = new FluentGridFilterManager<FilterManagerTestEntity>(GetTestEntities());
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => manager.AddOrUpdateFilter(null, e => e.Age > 30));
@@ -35,7 +35,7 @@ namespace FluentGridToolkit.Tests
         public void AddOrUpdateFilter_NullFilter_ThrowsArgumentNullException()
         {
             // Arrange
-            var manager = new GridFilterManager<TestEntity>(GetTestEntities());
+            var manager = new FluentGridFilterManager<FilterManagerTestEntity>(GetTestEntities());
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => manager.AddOrUpdateFilter("Age", null));
@@ -45,8 +45,8 @@ namespace FluentGridToolkit.Tests
         public void AddOrUpdateFilter_ValidInput_AddsFilter()
         {
             // Arrange
-            var manager = new GridFilterManager<TestEntity>(GetTestEntities());
-            Expression<Func<TestEntity, bool>> filter = e => e.Age > 30;
+            var manager = new FluentGridFilterManager<FilterManagerTestEntity>(GetTestEntities());
+            Expression<Func<FilterManagerTestEntity, bool>> filter = e => e.Age > 30;
 
             // Act
             manager.AddOrUpdateFilter("Age", filter);
@@ -61,7 +61,7 @@ namespace FluentGridToolkit.Tests
         public void RemoveFilter_ValidColumn_RemovesFilter()
         {
             // Arrange
-            var manager = new GridFilterManager<TestEntity>(GetTestEntities());
+            var manager = new FluentGridFilterManager<FilterManagerTestEntity>(GetTestEntities());
             manager.AddOrUpdateFilter("Age", e => e.Age > 30);
 
             // Act
@@ -76,7 +76,7 @@ namespace FluentGridToolkit.Tests
         public void RemoveFilter_NullColumn_ThrowsArgumentNullException()
         {
             // Arrange
-            var manager = new GridFilterManager<TestEntity>(GetTestEntities());
+            var manager = new FluentGridFilterManager<FilterManagerTestEntity>(GetTestEntities());
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => manager.RemoveFilter(null));
@@ -86,7 +86,7 @@ namespace FluentGridToolkit.Tests
         public void ClearFilters_ClearsAllFilters()
         {
             // Arrange
-            var manager = new GridFilterManager<TestEntity>(GetTestEntities());
+            var manager = new FluentGridFilterManager<FilterManagerTestEntity>(GetTestEntities());
             manager.AddOrUpdateFilter("Age", e => e.Age > 30);
             manager.AddOrUpdateFilter("Name", e => e.Name.Contains("Alice"));
 
@@ -102,7 +102,7 @@ namespace FluentGridToolkit.Tests
         public void ApplyFilters_CombinesFilters_ReturnsFilteredData()
         {
             // Arrange
-            var manager = new GridFilterManager<TestEntity>(GetTestEntities());
+            var manager = new FluentGridFilterManager<FilterManagerTestEntity>(GetTestEntities());
             manager.AddOrUpdateFilter("Age", e => e.Age > 25);
             manager.AddOrUpdateFilter("Name", e => e.Name.Contains("Bob"));
 
@@ -115,7 +115,7 @@ namespace FluentGridToolkit.Tests
         }
     }
 
-    public class TestEntity
+    public class FilterManagerTestEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }

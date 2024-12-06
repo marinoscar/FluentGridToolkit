@@ -12,17 +12,17 @@ namespace FluentGridToolkit
     /// Manages dynamic filtering of an <see cref="IQueryable{T}"/> data source by applying and managing multiple filters.
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity in the data source.</typeparam>
-    public class GridFilterManager<TEntity>
+    public class FluentGridFilterManager<TEntity>
     {
         private readonly IQueryable<TEntity> _baseQuery;
         private readonly Dictionary<string, Expression<Func<TEntity, bool>>> _filters = new();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GridFilterManager{T}"/> class with the provided base query.
+        /// Initializes a new instance of the <see cref="FluentGridFilterManager{T}"/> class with the provided base query.
         /// </summary>
         /// <param name="baseQuery">The base query on which filters will be applied.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="baseQuery"/> is null.</exception>
-        public GridFilterManager(IQueryable<TEntity> baseQuery)
+        public FluentGridFilterManager(IQueryable<TEntity> baseQuery)
         {
             _baseQuery = baseQuery ?? throw new ArgumentNullException(nameof(baseQuery), "Base query cannot be null.");
         }

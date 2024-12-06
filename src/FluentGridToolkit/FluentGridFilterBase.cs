@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FluentGridToolkit
 {
-    public abstract class FilterComponentBase<TGridItem, TProp> : FluentComponentBase
+    public abstract class FluentGridFilterBase<TGridItem, TProp> : FluentComponentBase
     {
         /// <summary>
         /// True if there is a data error, otherwise false
@@ -22,10 +22,10 @@ namespace FluentGridToolkit
         public Expression<Func<TGridItem, bool>> FilterExpression { get; private set; } = default!;
 
         /// <summary>
-        /// Gets or sets the <see cref="GridFilterManager{TEntity}"/>
+        /// Gets or sets the <see cref="FluentGridFilterManager{TEntity}"/>
         /// </summary>
         [Parameter]
-        public required GridFilterManager<TGridItem> FilterManager { get; set; }
+        public required FluentGridFilterManager<TGridItem> FilterManager { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the column to which the filter is applied
@@ -38,6 +38,27 @@ namespace FluentGridToolkit
         /// </summary>
         [Parameter, EditorRequired]
         public Expression<Func<TGridItem, TProp>> Property { get; set; } = default!;
+
+        /// <summary>
+        /// Event callback invoked when the search button is clicked.
+        /// </summary>
+        /// <remarks>
+        /// The callback provides a tuple containing the <see cref="StartDate"/> and <see cref="EndDate"/> as parameters.
+        /// </remarks>
+        [Parameter]
+        public EventCallback<(DateTime? Start, DateTime? End)> OnSearchClicked { get; set; }
+
+        /// <summary>
+        /// Event callback invoked when the clear button is clicked.
+        /// </summary>
+        [Parameter]
+        public EventCallback OnClearClicked { get; set; }
+
+        /// <summary>
+        /// Event callback when the filter expression has changed
+        /// </summary>
+        [Parameter]
+        public EventCallback OnValueChanged { get; set; }
 
     }
 }

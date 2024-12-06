@@ -1,0 +1,28 @@
+﻿@using Microsoft.FluentUI.AspNetCore.Components
+@inherits FluentGridFilterBase<TGridItem, TProp>
+@typeparam TGridItem
+@typeparam TProp
+
+<FluentStack VerticalAlignment="VerticalAlignment.Center">
+    <!-- Input Box -->
+    <FluentTextField Placeholder="@Placeholder" @bind-Value=SearchText Style="@InputStyle" />
+
+    <!-- Button with Search Icon -->
+    @if (ShowSearchButton)
+    {
+        <FluentButton Appearance="@SearchButtonAppearance" @onclick=HandleSearch>
+            <FluentIcon Value="@SearchIcon" />
+        </FluentButton>
+    }
+
+    <!-- Button with Clear Icon -->
+    @if (ShowClearButton)
+    {
+        <FluentButton Appearance="@ClearButtonAppearance" @onclick=OnClear>
+            <FluentIcon Value="@ClearIcon" />
+        </FluentButton>
+    }
+</FluentStack>
+
+@code {
+}

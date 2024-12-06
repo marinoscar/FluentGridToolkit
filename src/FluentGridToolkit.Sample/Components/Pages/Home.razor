@@ -32,7 +32,7 @@ ResizableColumns=true>
     <PropertyColumn @ref="dateColumn" Property="@(p => p.AccountCreatedDate)" Title="Open Date" Format="yyyy-MM-dd" Sortable="true">
         <ColumnOptions>
             <div class="search-box">
-                <DateRangeFilter Property="@(dateColumn.Property)" ColumnName="@dateColumn.Title" FilterManager="@filterManager" OnValueChanged="OnFilterChange" ></DateRangeFilter>
+                <FluentGridDateRangeFilter Property="@(dateColumn.Property)" ColumnName="@dateColumn.Title" FilterManager="@filterManager" OnValueChanged="OnFilterChange" ></FluentGridDateRangeFilter>
             </div>
         </ColumnOptions>
     </PropertyColumn>
@@ -45,13 +45,13 @@ ResizableColumns=true>
 </FluentDataGrid>
 
 @code{
-    private GridFilterManager<Account> filterManager = default;
+    private FluentGridFilterManager<Account> filterManager = default;
 
     private PropertyColumn<Account, DateTime> dateColumn;
 
     protected override void OnInitialized()
     {
-        filterManager = new GridFilterManager<Account>(dbContext.Accounts);
+        filterManager = new FluentGridFilterManager<Account>(dbContext.Accounts);
     }
 
     private void OnFilterChange(){
