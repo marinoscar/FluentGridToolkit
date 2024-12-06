@@ -22,6 +22,12 @@ namespace FluentGridToolkit
         public Expression<Func<TGridItem, bool>> FilterExpression { get; private set; } = default!;
 
         /// <summary>
+        /// Gets or sets the <see cref="GridFilterManager{TEntity}"/>
+        /// </summary>
+        [Parameter]
+        public required GridFilterManager<TGridItem> FilterManager { get; set; }
+
+        /// <summary>
         /// Gets or sets the name of the column to which the filter is applied
         /// </summary>
         [Parameter]
@@ -121,6 +127,12 @@ namespace FluentGridToolkit
         public EventCallback OnClearClicked { get; set; }
 
         /// <summary>
+        /// Event callback when the filter expression has changed
+        /// </summary>
+        [Parameter]
+        public EventCallback OnValueChanged { get; set; }
+
+        /// <summary>
         /// Handles the search button click event.
         /// Validates the date range and invokes the <see cref="OnSearchClicked"/> callback.
         /// </summary>
@@ -131,9 +143,14 @@ namespace FluentGridToolkit
                 // Log or handle invalid date range logic
                 return;
             }
+            var expression = CreateExpression();
+            FilterManager.AddOrUpdateFilter(ColumnName, expression);
 
             if (OnSearchClicked.HasDelegate)
                 await OnSearchClicked.InvokeAsync((StartDate, EndDate));
+
+            if (OnValueChanged.HasDelegate)
+                await OnValueChanged.InvokeAsync();
         }
 
         /// <summary>
@@ -145,8 +162,14 @@ namespace FluentGridToolkit
             StartDate = null;
             EndDate = null;
 
+            //Clears the filter
+            FilterManager.RemoveFilter(ColumnName);
+
             if (OnClearClicked.HasDelegate)
                 await OnClearClicked.InvokeAsync();
+
+            if (OnValueChanged.HasDelegate)
+                await OnValueChanged.InvokeAsync();
         }
 
         /// <summary>

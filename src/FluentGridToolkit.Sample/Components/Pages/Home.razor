@@ -1,4 +1,6 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+
 @using FluentGridToolkit.Sample.Model
 @inject DbContext dbContext
 
@@ -6,7 +8,7 @@
 
 <h1>DataGid Example</h1>
 
-<FluentDataGrid Items="@dbContext.Accounts" ShowHover="true"
+<FluentDataGrid Items="@filterManager.Data" ShowHover="true"
 ResizableColumns=true>
     <PropertyColumn Property="@(p => p.Name)" Title="Name" Sortable="true">
         <ColumnOptions>
@@ -27,10 +29,10 @@ ResizableColumns=true>
             </div>
         </ColumnOptions>
     </PropertyColumn>
-    <PropertyColumn Property="@(p => p.AccountCreatedDate)" Title="Open Date" Format="yyyy-MM-dd" Sortable="true">
+    <PropertyColumn @ref="dateColumn" Property="@(p => p.AccountCreatedDate)" Title="Open Date" Format="yyyy-MM-dd" Sortable="true">
         <ColumnOptions>
             <div class="search-box">
-                
+                <DateRangeFilter Property="@(dateColumn.Property)" ColumnName="@dateColumn.Title" FilterManager="@filterManager" OnValueChanged="OnFilterChange" ></DateRangeFilter>
             </div>
         </ColumnOptions>
     </PropertyColumn>
@@ -43,5 +45,16 @@ ResizableColumns=true>
 </FluentDataGrid>
 
 @code{
-    
+    private GridFilterManager<Account> filterManager = default;
+
+    private PropertyColumn<Account, DateTime> dateColumn;
+
+    protected override void OnInitialized()
+    {
+        filterManager = new GridFilterManager<Account>(dbContext.Accounts);
+    }
+
+    private void OnFilterChange(){
+        filterManager.ApplyFilters();
+    }
 }
