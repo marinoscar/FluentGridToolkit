@@ -35,11 +35,6 @@ namespace FluentGridToolkit
         [Parameter]
         public EventCallback<string> OnSearchClicked { get; set; }
 
-        /// <summary>
-        /// Event callback triggered when the clear button is clicked.
-        /// </summary>
-        [Parameter]
-        public EventCallback OnClearClicked { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the search button should be displayed.
@@ -98,6 +93,7 @@ namespace FluentGridToolkit
         private async Task OnClear()
         {
             SearchText = string.Empty; // Automatically clear the search text
+            FilterManager.RemoveFilter(ColumnName);
             if (OnClearClicked.HasDelegate)
                 await OnClearClicked.InvokeAsync();
             await ValueChanged();

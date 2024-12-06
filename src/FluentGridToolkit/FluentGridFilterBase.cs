@@ -39,14 +39,6 @@ namespace FluentGridToolkit
         [Parameter, EditorRequired]
         public Expression<Func<TGridItem, TProp>> Property { get; set; } = default!;
 
-        /// <summary>
-        /// Event callback invoked when the search button is clicked.
-        /// </summary>
-        /// <remarks>
-        /// The callback provides a tuple containing the <see cref="StartDate"/> and <see cref="EndDate"/> as parameters.
-        /// </remarks>
-        [Parameter]
-        public EventCallback<(DateTime? Start, DateTime? End)> OnSearchClicked { get; set; }
 
         /// <summary>
         /// Event callback invoked when the clear button is clicked.

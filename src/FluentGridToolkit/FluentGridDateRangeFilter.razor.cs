@@ -89,6 +89,15 @@ namespace FluentGridToolkit
         public string ClearButtonTooltip { get; set; } = "Clear Filters";
 
         /// <summary>
+        /// Event callback invoked when the search button is clicked.
+        /// </summary>
+        /// <remarks>
+        /// The callback provides a tuple containing the <see cref="StartDate"/> and <see cref="EndDate"/> as parameters.
+        /// </remarks>
+        [Parameter]
+        public EventCallback<(DateTime? Start, DateTime? End)> OnSearchClicked { get; set; }
+
+        /// <summary>
         /// Handles the search button click event.
         /// Validates the date range and invokes the <see cref="OnSearchClicked"/> callback.
         /// </summary>
