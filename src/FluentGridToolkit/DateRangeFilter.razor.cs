@@ -13,36 +13,8 @@ namespace FluentGridToolkit
     /// <summary>
     /// A Blazor component that provides a user interface for filtering data by a date range.
     /// </summary>
-    public partial class DateRangeFilter<TGridItem, TProp> : FluentComponentBase
+    public partial class DateRangeFilter<TGridItem, TProp> : FilterComponentBase<TGridItem, TProp>
     {
-
-        /// <summary>
-        /// True if there is a data error, otherwise false
-        /// </summary>
-        public bool HasError { get; private set; }
-
-        /// <summary>
-        /// Gets the filter expression
-        /// </summary>
-        public Expression<Func<TGridItem, bool>> FilterExpression { get; private set; } = default!;
-
-        /// <summary>
-        /// Gets or sets the <see cref="GridFilterManager{TEntity}"/>
-        /// </summary>
-        [Parameter]
-        public required GridFilterManager<TGridItem> FilterManager { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the column to which the filter is applied
-        /// </summary>
-        [Parameter]
-        public required string ColumnName { get; set; }
-
-        /// <summary>
-        /// Defines the value to be used in the fiter expression
-        /// </summary>
-        [Parameter, EditorRequired]
-        public Expression<Func<TGridItem, TProp>> Property { get; set; } = default!;
 
         /// <summary>
         /// Gets or sets the start date of the date range filter.
@@ -184,7 +156,7 @@ namespace FluentGridToolkit
         /// </summary>
         /// <returns>The generated expression.</returns>
         /// <exception cref="InvalidOperationException">Thrown if Property is not set.</exception>
-        private Expression<Func<TGridItem, bool>> CreateExpression()
+        protected virtual Expression<Func<TGridItem, bool>> CreateExpression()
         {
             if (Property == null)
                 throw new InvalidOperationException("The Property expression must be set before creating a comparison expression.");
