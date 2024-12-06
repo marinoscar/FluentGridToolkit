@@ -1,0 +1,36 @@
+﻿@using Microsoft.FluentUI.AspNetCore.Components
+@inherits FluentComponentBase
+@typeparam TGridItem
+
+<FluentStack Orientation="Orientation.Vertical">
+
+    <!-- Start Date Input -->
+    <FluentDatePicker 
+        Label="@StartDateLabel" 
+        AriaLabel="@StartDateAriaLabel" 
+        @bind-Value="@StartDate" />
+
+    <!-- End Date Input -->
+    <FluentDatePicker 
+        Label="@EndDateLabel" 
+        AriaLabel="@EndDateAriaLabel" 
+        @bind-Value="@EndDate" />
+
+    <!-- Action Buttons -->
+    <FluentStack HorizontalAlignment="HorizontalAlignment.End" Gap="10px">
+        <!-- Apply/Search Button -->
+        <FluentButton Appearance="@SearchButtonAppearance" Title="@SearchButtonTooltip" @onclick=HandleSearch>
+            <FluentIcon Value="@SearchIcon" />
+        </FluentButton>
+
+        <!-- Clear Button -->
+        <FluentButton Appearance="@ClearButtonAppearance" Title="@ClearButtonTooltip" @onclick=OnClear>
+            <FluentIcon Value="@ClearIcon" />
+        </FluentButton>
+    </FluentStack>
+</FluentStack>
+
+@code {
+    
+}
+
