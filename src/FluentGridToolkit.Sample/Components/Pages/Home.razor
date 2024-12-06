@@ -1,7 +1,42 @@
 ﻿@page "/"
+@inject DbContext dbContext
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>DataGid Example</h1>
 
-Welcome to your new Fluent Blazor app.
+<FluentDataGrid Items="@dbContext.Accounts" ShowHover="true"
+ResizableColumns=true>
+    <PropertyColumn Property="@(p => p.Name)" Title="Name" Sortable="true">
+        <ColumnOptions>
+            <div class="search-box">
+
+            </div>
+        </ColumnOptions>
+    </PropertyColumn>
+    <PropertyColumn Property="@(p => p.Email)" Title="Email" Sortable="true">
+        <ColumnOptions>
+            <div class="search-box">
+            </div>
+        </ColumnOptions>
+    </PropertyColumn>
+    <PropertyColumn Property="@(p => p.TotalSales)" Title="Total Sales" Format="N2" Align="Align.End" Sortable="true">
+        <ColumnOptions>
+            <div class="search-box">
+            </div>
+        </ColumnOptions>
+    </PropertyColumn>
+    <PropertyColumn Property="@(p => p.AccountCreatedDate)" Title="Open Date" Format="yyyy-MM-dd" Sortable="true">
+        <ColumnOptions>
+            <div class="search-box">
+                
+            </div>
+        </ColumnOptions>
+    </PropertyColumn>
+    <PropertyColumn Property="@(p => p.State)" Title="State" Sortable="true">
+        <ColumnOptions>
+            <div class="search-box">
+            </div>
+        </ColumnOptions>
+    </PropertyColumn>
+</FluentDataGrid>

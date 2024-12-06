@@ -13,6 +13,7 @@ namespace FluentGridToolkit.Sample
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
             builder.Services.AddFluentUIComponents();
+            builder.Services.AddSingleton<DbContext>();
 
             var app = builder.Build();
 

@@ -3,6 +3,7 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,8 +14,17 @@ namespace FluentGridToolkit
     /// </summary>
     public partial class DateRangeFilter<TGridItem> : FluentComponentBase
     {
+        /// <summary>
+        /// Gets or sets the name of the column to which the filter is applied
+        /// </summary>
+        [Parameter]
+        public required string ColumnName { get; set; }
 
-        public required FluentDataGrid<TGridItem> ParentGrid { get; set; }
+        /// <summary>
+        /// Gets or sets the lambda filter expression for the item
+        /// </summary>
+        [Parameter]
+        public required Expression<Func<TGridItem, bool>> FilterExpression { get; set; }
 
         /// <summary>
         /// Gets or sets the start date of the date range filter.
