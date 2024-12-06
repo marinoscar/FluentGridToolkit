@@ -17,6 +17,11 @@ namespace FluentGridToolkit
     {
 
         /// <summary>
+        /// True if there is a data error, otherwise false
+        /// </summary>
+        public bool HasError { get; private set; }
+
+        /// <summary>
         /// Gets the filter expression
         /// </summary>
         public Expression<Func<TGridItem, bool>> FilterExpression { get; private set; } = default!;
@@ -140,9 +145,11 @@ namespace FluentGridToolkit
         {
             if (StartDate > EndDate)
             {
-                // Log or handle invalid date range logic
+                HasError = true;
+                StateHasChanged();
                 return;
             }
+            HasError = false;
             var expression = CreateExpression();
             FilterManager.AddOrUpdateFilter(ColumnName, expression);
 

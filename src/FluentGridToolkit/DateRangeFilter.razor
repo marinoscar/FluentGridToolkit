@@ -1,21 +1,27 @@
-﻿@using Microsoft.FluentUI.AspNetCore.Components
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.FluentUI.AspNetCore.Components
 @inherits FluentComponentBase
 @typeparam TGridItem
 @typeparam TProp
 
 <FluentStack Orientation="Orientation.Vertical">
+    @if(HasError){
+        <FluentMessageBar itemref="bar" Title="Date Error" Intent="@MessageIntent.Error" AllowDismiss="false">
+            Error: Start Date cannot be greater than End Date
+        </FluentMessageBar>
+    }
 
     <!-- Start Date Input -->
-    <FluentDatePicker 
-        Label="@StartDateLabel" 
-        AriaLabel="@StartDateAriaLabel" 
-        @bind-Value="@StartDate" />
+    <FluentDatePicker Label="@StartDateLabel"
+                      AriaLabel="@StartDateAriaLabel"
+                      style="width:100%"
+                      @bind-Value="@StartDate" />
 
     <!-- End Date Input -->
-    <FluentDatePicker 
-        Label="@EndDateLabel" 
-        AriaLabel="@EndDateAriaLabel" 
-        @bind-Value="@EndDate" />
+    <FluentDatePicker Label="@EndDateLabel"
+                      AriaLabel="@EndDateAriaLabel"
+                      style="width:100%"
+                      @bind-Value="@EndDate" />
 
     <!-- Action Buttons -->
     <FluentStack HorizontalAlignment="HorizontalAlignment.End" Gap="10px">
@@ -32,6 +38,10 @@
 </FluentStack>
 
 @code {
-   
+
+    protected override void OnInitialized()
+    {
+       
+    }
 }
 
