@@ -54,11 +54,26 @@ namespace FluentGridToolkit
 
             foreach (var filter in filters)
             {
-                // Access the property (e.g., x.PropertyName)
-                var property = Expression.Property(parameter, filter.PropertyName);
+                // Change property type from MemberExpression to Expression to support transformations
+                Expression property = Expression.Property(parameter, filter.PropertyName);
+                Expression constant = Expression.Constant(filter.Value);
 
-                // Create the constant (filter.Value)
-                var constant = Expression.Constant(filter.Value);
+                Expression? notNullCheck = null;
+
+                // Apply null-check only if the property type supports null values
+                if (!property.Type.IsValueType || Nullable.GetUnderlyingType(property.Type) != null)
+                {
+                    notNullCheck = Expression.NotEqual(property, Expression.Constant(null, property.Type));
+                }
+
+                // For case-insensitive comparison
+                if (filter.IgnoreCase && filter.Value is string)
+                {
+                    // Convert property and value to lowercase
+                    var toLowerMethod = typeof(string).GetMethod("ToLower", Type.EmptyTypes);
+                    property = Expression.Call(property, toLowerMethod);
+                    constant = Expression.Call(constant, toLowerMethod);
+                }
 
                 Expression condition;
 
@@ -69,12 +84,15 @@ namespace FluentGridToolkit
                     if (method == null)
                         throw new InvalidOperationException($"Method '{filter.MethodName}' not found on type '{typeof(string)}'.");
 
-                    condition = Expression.Call(property, method, constant);
+                    var methodCall = Expression.Call(property, method, constant);
+
+                    // Add a null-check before the method call if applicable
+                    condition = notNullCheck != null ? Expression.AndAlso(notNullCheck, methodCall) : methodCall;
                 }
                 else if (filter.Operator.HasValue)
                 {
                     // Handle comparison operators
-                    condition = filter.Operator switch
+                    var comparison = filter.Operator switch
                     {
                         ComparisonOperator.Equal => Expression.Equal(property, constant),
                         ComparisonOperator.NotEqual => Expression.NotEqual(property, constant),
@@ -84,13 +102,15 @@ namespace FluentGridToolkit
                         ComparisonOperator.LessThanOrEqual => Expression.LessThanOrEqual(property, constant),
                         _ => throw new NotSupportedException($"Operator '{filter.Operator}' is not supported.")
                     };
+
+                    // Add a null-check before the comparison if applicable
+                    condition = notNullCheck != null ? Expression.AndAlso(notNullCheck, comparison) : comparison;
                 }
                 else
                 {
                     throw new InvalidOperationException("Filter must specify either a MethodName or an Operator.");
                 }
 
-                // Combine expressions
                 if (combinedExpression == null)
                 {
                     combinedExpression = condition;
@@ -118,6 +138,7 @@ namespace FluentGridToolkit
 
             return Expression.Lambda<Func<T, bool>>(combinedExpression, parameter);
         }
+
     }
 
 

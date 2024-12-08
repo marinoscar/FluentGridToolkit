@@ -256,6 +256,144 @@ namespace FluentGridToolkit.Tests
             Assert.Contains(result, account => account.State == "NY");
         }
 
+        [Fact]
+        public void Filter_Accounts_By_Name_CaseInsensitive()
+        {
+            // Arrange
+            var filters = new List<FilterExpression>
+    {
+        new FilterExpression
+        {
+            PropertyName = "Name",
+            MethodName = "Contains",
+            Value = "bro",
+            BinaryExpression = BinaryOperation.And,
+            IgnoreCase = true // Enable case-insensitive search
+        }
+    };
+
+            var accounts = GetSampleAccounts();
+
+            // Act
+            var predicate = DynamicExpressionBuilder.BuildExpression<Account>(filters);
+            var result = accounts.AsQueryable().Where(predicate).ToList();
+
+            // Assert
+            Assert.Single(result);
+            Assert.Equal("Alice Brown", result[0].Name);
+        }
+
+        [Fact]
+        public void Filter_Accounts_By_Email_CaseInsensitive()
+        {
+            // Arrange
+            var filters = new List<FilterExpression>
+            {
+                new FilterExpression
+                {
+                    PropertyName = "Email",
+                    MethodName = "Contains",
+                    Value = "bob",
+                    BinaryExpression = BinaryOperation.And,
+                    IgnoreCase = true // Enable case-insensitive search
+                }
+            };
+
+            var accounts = GetSampleAccounts();
+
+            // Act
+            var predicate = DynamicExpressionBuilder.BuildExpression<Account>(filters);
+            var result = accounts.AsQueryable().Where(predicate).ToList();
+
+            // Assert
+            Assert.Single(result);
+            Assert.Contains(result, account => account.Email == "bob@example.com");
+        }
+
+        [Fact]
+        public void Filter_Accounts_Handles_Null_Names_Gracefully()
+        {
+            // Arrange
+            var accounts = GetSampleAccounts();
+            accounts.Add(new Account { Id = 5, Name = null, Email = "null@example.com", TotalSales = 0, State = "TX" });
+
+            var filters = new List<FilterExpression>
+    {
+        new FilterExpression
+        {
+            PropertyName = "Name",
+            MethodName = "Contains",
+            Value = "bro",
+            BinaryExpression = BinaryOperation.And,
+            IgnoreCase = true // Enable case-insensitive search
+        }
+    };
+
+            // Act
+            var predicate = DynamicExpressionBuilder.BuildExpression<Account>(filters);
+            var result = accounts.AsQueryable().Where(predicate).ToList();
+
+            // Assert
+            Assert.Single(result); // Only "John Doe" matches
+            Assert.Equal("Alice Brown", result[0].Name);
+        }
+
+        [Fact]
+        public void Filter_Accounts_With_Null_State_And_Comparison()
+        {
+            // Arrange
+            var accounts = GetSampleAccounts();
+            accounts.Add(new Account { Id = 6, Name = "Test User", State = null, TotalSales = 0 });
+
+            var filters = new List<FilterExpression>
+            {
+                new FilterExpression
+                {
+                    PropertyName = "State",
+                    Operator = ComparisonOperator.Equal,
+                    Value = "TX",
+                    BinaryExpression = BinaryOperation.And
+                }
+            };
+
+            // Act
+            var predicate = DynamicExpressionBuilder.BuildExpression<Account>(filters);
+            var result = accounts.AsQueryable().Where(predicate).ToList();
+
+            // Assert
+            Assert.Equal(2, result.Count); // Only accounts with "TX" state
+            Assert.True(result.All(a => a.State == "TX"), "All states should be TX");
+        }
+
+    //    [Fact]
+    //    public void Filter_Accounts_By_TotalSales_With_Null_Safe_Check()
+    //    {
+    //        // Arrange
+    //        var accounts = GetSampleAccounts();
+    //        accounts.Add(new Account { Id = 7, Name = "Null Test", State = "TX", TotalSales = null });
+
+    //        var filters = new List<FilterExpression>
+    //{
+    //    new FilterExpression
+    //    {
+    //        PropertyName = "TotalSales",
+    //        Operator = ComparisonOperator.GreaterThan,
+    //        Value = 100.0,
+    //        BinaryExpression = BinaryOperation.And
+    //    }
+    //};
+
+    //        // Act
+    //        var predicate = DynamicExpressionBuilder.BuildExpression<Account>(filters);
+    //        var result = accounts.AsQueryable().Where(predicate).ToList();
+
+    //        // Assert
+    //        Assert.Equal(2, result.Count); // Excludes null TotalSales
+    //        Assert.True(result.All(a => a.TotalSales > 100), "All sales should be over 100");
+    //    }
+
+
+
     }
 
 }
