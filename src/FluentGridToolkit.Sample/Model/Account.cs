@@ -41,7 +41,7 @@ namespace FluentGridToolkit.Sample.Model
         [Required(ErrorMessage = "Total sales is required.")]
         [Range(0, double.MaxValue, ErrorMessage = "Total sales must be a positive number.")]
         [Column("TotalSales")]
-        public double TotalSales { get; set; }
+        public double? TotalSales { get; set; }
 
         /// <summary>
         /// The state where the company is located.

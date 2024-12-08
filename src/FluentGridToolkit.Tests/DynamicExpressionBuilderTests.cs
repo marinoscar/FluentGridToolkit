@@ -365,32 +365,39 @@ namespace FluentGridToolkit.Tests
             Assert.True(result.All(a => a.State == "TX"), "All states should be TX");
         }
 
-    //    [Fact]
-    //    public void Filter_Accounts_By_TotalSales_With_Null_Safe_Check()
-    //    {
-    //        // Arrange
-    //        var accounts = GetSampleAccounts();
-    //        accounts.Add(new Account { Id = 7, Name = "Null Test", State = "TX", TotalSales = null });
+        [Fact]
+        public void Filter_Accounts_By_TotalSales_With_Null_Safe_Check()
+        {
+            // Arrange
+            var accounts = GetSampleAccounts();
+            accounts.Add(new Account { Id = 7, Name = "Null Test", State = "TX", TotalSales = null });
 
-    //        var filters = new List<FilterExpression>
-    //{
-    //    new FilterExpression
-    //    {
-    //        PropertyName = "TotalSales",
-    //        Operator = ComparisonOperator.GreaterThan,
-    //        Value = 100.0,
-    //        BinaryExpression = BinaryOperation.And
-    //    }
-    //};
+            var filters = new List<FilterExpression>
+            {
+                    new FilterExpression
+                    {
+                        PropertyName = "TotalSales",
+                        Operator = ComparisonOperator.GreaterThan,
+                        Value = 200.0,
+                        BinaryExpression = FluentGridToolkit.BinaryExpression.And
+                    },
+                    new FilterExpression
+                    {
+                        PropertyName = "TotalSales",
+                        Operator = ComparisonOperator.LessThan,
+                        Value = 1000.0,
+                        BinaryExpression = FluentGridToolkit.BinaryExpression.And
+                    }
+            };
 
-    //        // Act
-    //        var predicate = DynamicExpressionBuilder.BuildExpression<Account>(filters);
-    //        var result = accounts.AsQueryable().Where(predicate).ToList();
+            // Act
+            var predicate = DynamicExpressionBuilder.BuildExpression<Account>(filters);
+            var result = accounts.AsQueryable().Where(predicate).ToList();
 
-    //        // Assert
-    //        Assert.Equal(2, result.Count); // Excludes null TotalSales
-    //        Assert.True(result.All(a => a.TotalSales > 100), "All sales should be over 100");
-    //    }
+            // Assert
+            Assert.Single(result); // Excludes null TotalSales
+            Assert.True(result.All(a => a.TotalSales > 100), "All sales should be over 100");
+        }
 
 
 

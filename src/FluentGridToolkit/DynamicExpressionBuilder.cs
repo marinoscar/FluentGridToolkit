@@ -66,6 +66,13 @@ namespace FluentGridToolkit
                     notNullCheck = Expression.NotEqual(property, Expression.Constant(null, property.Type));
                 }
 
+                // Handle Nullable<T> types for comparisons
+                if (Nullable.GetUnderlyingType(property.Type) != null)
+                {
+                    // Unwrap the Nullable<T> for comparisons
+                    property = Expression.Property(property, "Value");
+                }
+
                 // For case-insensitive comparison
                 if (filter.IgnoreCase && filter.Value is string)
                 {
