@@ -10,8 +10,7 @@ namespace FluentGridToolkit
     /// <summary>
     /// Represents a filter expression for dynamically building LINQ queries.
     /// </summary>
-    /// <typeparam name="TProperty">The type of the property being filtered.</typeparam>
-    public class FilterExpression<TProperty>
+    public class FilterExpression
     {
         /// <summary>
         /// Gets or sets the name of the property to filter on.
@@ -29,7 +28,7 @@ namespace FluentGridToolkit
         /// <remarks>
         /// The type of this value should match the type of the property being filtered.
         /// </remarks>
-        public TProperty Value { get; set; }
+        public object Value { get; set; }
 
         /// <summary>
         /// Gets or sets the name of a method to invoke on the property for evaluation.
