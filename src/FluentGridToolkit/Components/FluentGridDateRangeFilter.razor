@@ -1,11 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.FluentUI.AspNetCore.Components
+
 @inherits FluentGridFilterBase<TGridItem, TProp>
 @typeparam TGridItem
 @typeparam TProp
 
 <FluentStack Orientation="Orientation.Vertical">
-    @if(HasError){
+    @if (HasError)
+    {
         <FluentMessageBar itemref="bar" Title="Date Error" Intent="@MessageIntent.Error" AllowDismiss="false">
             Error: Start Date cannot be greater than End Date
         </FluentMessageBar>
@@ -25,15 +27,23 @@
 
     <!-- Action Buttons -->
     <FluentStack HorizontalAlignment="HorizontalAlignment.End" Gap="10px">
+
         <!-- Apply/Search Button -->
-        <FluentButton Appearance="@SearchButtonAppearance" Title="@SearchButtonTooltip" @onclick=HandleSearch>
-            <FluentIcon Value="@SearchIcon" />
-        </FluentButton>
+        @if (ShowSearchButton)
+        {
+            <FluentButton Appearance="@SearchButtonAppearance" Title="@SearchButtonTooltip" @onclick=HandleSearch>
+                <FluentIcon Value="@SearchIcon" />
+            </FluentButton>
+        }
+
 
         <!-- Clear Button -->
-        <FluentButton Appearance="@ClearButtonAppearance" Title="@ClearButtonTooltip" @onclick=OnClear>
-            <FluentIcon Value="@ClearIcon" />
-        </FluentButton>
+        @if (ShowClearButton)
+        {
+            <FluentButton Appearance="@ClearButtonAppearance" Title="@ClearButtonTooltip" @onclick=OnClear>
+                <FluentIcon Value="@ClearIcon" />
+            </FluentButton>
+        }
     </FluentStack>
 </FluentStack>
 
@@ -41,7 +51,7 @@
 
     protected override void OnInitialized()
     {
-       
+
     }
 }
 

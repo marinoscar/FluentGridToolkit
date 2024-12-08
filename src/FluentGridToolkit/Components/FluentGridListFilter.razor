@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.FluentUI.AspNetCore.Components
+
+@inherits FluentGridFilterBase<TGridItem, TProp>
+@typeparam TGridItem
+@typeparam TProp
+<FluentStack Orientation="Orientation.Vertical">
+    <FluentCombobox Placeholder="Make a selection..."
+                    Items="@Items"
+                    Label="Best song"
+                    Autofocus="true"
+                    @bind-Value="@SelectedValue"
+                    Height="200px"
+                    Immediate ImmediateDelay="100" />
+
+    <!-- Button with Search Icon -->
+    @if (ShowSearchButton)
+    {
+        <FluentButton Appearance="@SearchButtonAppearance" @onclick=@(() => Console.WriteLine(""))>
+            <FluentIcon Value="@SearchIcon" />
+        </FluentButton>
+    }
+
+    <!-- Button with Clear Icon -->
+    @if (ShowClearButton)
+    {
+        <FluentButton Appearance="@ClearButtonAppearance" @onclick=@(() => Console.WriteLine(""))>
+            <FluentIcon Value="@ClearIcon" />
+        </FluentButton>
+    }
+
+</FluentStack>
+
+@code {
+
+    public string SelectedValue { get; set; } = default;
+    public List<TProp> Items { get; set; } = new();
+
+}

@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FluentGridToolkit
+namespace FluentGridToolkit.Components
 {
     /// <summary>
     /// A Blazor component that provides a user interface for filtering data by a date range.
@@ -51,42 +51,6 @@ namespace FluentGridToolkit
         /// </summary>
         [Parameter]
         public string EndDateAriaLabel { get; set; } = "End Date Picker";
-
-        /// <summary>
-        /// Gets or sets the appearance style for the search button.
-        /// </summary>
-        [Parameter]
-        public Appearance? SearchButtonAppearance { get; set; } = Appearance.Lightweight;
-
-        /// <summary>
-        /// Gets or sets the appearance style for the clear button.
-        /// </summary>
-        [Parameter]
-        public Appearance? ClearButtonAppearance { get; set; } = Appearance.Lightweight;
-
-        /// <summary>
-        /// Gets or sets the icon used for the search button.
-        /// </summary>
-        [Parameter]
-        public Icon SearchIcon { get; set; } = new ToolkitIcons.SearchIcon();
-
-        /// <summary>
-        /// Gets or sets the icon used for the clear button.
-        /// </summary>
-        [Parameter]
-        public Icon ClearIcon { get; set; } = new ToolkitIcons.XMarkIcon();
-
-        /// <summary>
-        /// Gets or sets the tooltip text for the search button.
-        /// </summary>
-        [Parameter]
-        public string SearchButtonTooltip { get; set; } = "Apply Filters";
-
-        /// <summary>
-        /// Gets or sets the tooltip text for the clear button.
-        /// </summary>
-        [Parameter]
-        public string ClearButtonTooltip { get; set; } = "Clear Filters";
 
         /// <summary>
         /// Event callback invoked when the search button is clicked.

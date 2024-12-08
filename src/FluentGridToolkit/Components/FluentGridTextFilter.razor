@@ -10,7 +10,7 @@
     <!-- Button with Search Icon -->
     @if (ShowSearchButton)
     {
-        <FluentButton Appearance="@SearchButtonAppearance" @onclick=HandleSearch>
+        <FluentButton Appearance="@SearchButtonAppearance" Title="@SearchButtonTooltip" @onclick=HandleSearch>
             <FluentIcon Value="@SearchIcon" />
         </FluentButton>
     }
@@ -18,7 +18,7 @@
     <!-- Button with Clear Icon -->
     @if (ShowClearButton)
     {
-        <FluentButton Appearance="@ClearButtonAppearance" @onclick=OnClear>
+        <FluentButton Appearance="@ClearButtonAppearance" Title="@ClearButtonTooltip" @onclick=OnClear>
             <FluentIcon Value="@ClearIcon" />
         </FluentButton>
     }
