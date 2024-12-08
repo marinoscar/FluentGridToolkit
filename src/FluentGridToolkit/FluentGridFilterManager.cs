@@ -76,7 +76,10 @@ namespace FluentGridToolkit
         public IQueryable<TEntity> ApplyFilters()
         {
             IQueryable<TEntity> query = _baseQuery;
+            
             var filters = _filters.Values.SelectMany(x => x.ToList()).ToList();
+            if(filters.Count <= 0) return query;
+
             var predicate = DynamicExpressionBuilder.BuildExpression<TEntity>(filters);
 
             query = query.Where(predicate);
