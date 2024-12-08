@@ -37,7 +37,7 @@ namespace FluentGridToolkit
         /// <description>Both <see cref="FilterExpression.MethodName"/> and <see cref="FilterExpression.Operator"/> are unset for a filter.</description>
         /// </item>
         /// <item>
-        /// <description>An unsupported <see cref="BinaryOperation"/> or <see cref="ComparisonOperator"/> is encountered.</description>
+        /// <description>An unsupported <see cref="BinaryExpression"/> or <see cref="ComparisonOperator"/> is encountered.</description>
         /// </item>
         /// </list>
         /// </exception>
@@ -45,7 +45,7 @@ namespace FluentGridToolkit
         /// This method dynamically combines multiple filter criteria into a single expression. 
         /// It supports both method-based filters (e.g., <see cref="string.Contains"/> or <see cref="string.StartsWith"/>) 
         /// and operator-based filters (e.g., <see cref="ComparisonOperator.GreaterThan"/> or <see cref="ComparisonOperator.Equal"/>).
-        /// Logical combinations (e.g., AND, OR) of multiple filters are achieved using the <see cref="BinaryOperation"/> property of each filter.
+        /// Logical combinations (e.g., AND, OR) of multiple filters are achieved using the <see cref="BinaryExpression"/> property of each filter.
         /// </remarks>
         public static Expression<Func<T, bool>> BuildExpression<T>(List<FilterExpression> filters)
         {
@@ -119,12 +119,12 @@ namespace FluentGridToolkit
                 {
                     switch (filter.BinaryExpression)
                     {
-                        case BinaryOperation.And:
-                        case BinaryOperation.AndAlso:
+                        case BinaryExpression.And:
+                        case BinaryExpression.AndAlso:
                             combinedExpression = Expression.AndAlso(combinedExpression, condition);
                             break;
-                        case BinaryOperation.Or:
-                        case BinaryOperation.OrElse:
+                        case BinaryExpression.Or:
+                        case BinaryExpression.OrElse:
                             combinedExpression = Expression.OrElse(combinedExpression, condition);
                             break;
                         default:

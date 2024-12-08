@@ -26,9 +26,9 @@ namespace FluentGridToolkit
         /// </summary>
         /// <remarks>
         /// Determines how this filter will be logically combined with other filters in the query.
-        /// For example, <see cref="BinaryOperation.And"/> combines this filter with another using a logical AND operation.
+        /// For example, <see cref="BinaryExpression.And"/> combines this filter with another using a logical AND operation.
         /// </remarks>
-        public BinaryOperation BinaryExpression { get; set; }
+        public BinaryExpression BinaryExpression { get; set; }
 
         /// <summary>
         /// Gets or sets the value to compare against the property.

@@ -9,7 +9,7 @@ namespace FluentGridToolkit
     /// <summary>
     /// Specifies the type of binary operation used to combine expressions.
     /// </summary>
-    public enum BinaryOperation
+    public enum BinaryExpression
     {
         /// <summary>
         /// Logical AND operator, combining expressions with "&&".

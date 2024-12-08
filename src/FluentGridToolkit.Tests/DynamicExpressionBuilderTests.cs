@@ -38,7 +38,7 @@ namespace FluentGridToolkit.Tests
                 PropertyName = "Name",
                 MethodName = "Contains",
                 Value = "ice",
-                BinaryExpression = FluentGridToolkit.BinaryOperation.And
+                BinaryExpression = FluentGridToolkit.BinaryExpression.And
             }
         };
 
@@ -64,7 +64,7 @@ namespace FluentGridToolkit.Tests
                 PropertyName = "TotalSales",
                 Operator = ComparisonOperator.GreaterThan,
                 Value = 300.0,
-                BinaryExpression = FluentGridToolkit.BinaryOperation.And
+                BinaryExpression = FluentGridToolkit.BinaryExpression.And
             }
         };
 
@@ -89,28 +89,28 @@ namespace FluentGridToolkit.Tests
                 PropertyName = "Name",
                 MethodName = "Contains",
                 Value = "John",
-                BinaryExpression = FluentGridToolkit.BinaryOperation.And
+                BinaryExpression = FluentGridToolkit.BinaryExpression.And
             },
             new FilterExpression
             {
                 PropertyName = "AccountCreatedDate",
                 Operator = ComparisonOperator.GreaterThan,
                 Value = DateTime.UtcNow.AddMonths(-3),
-                BinaryExpression = FluentGridToolkit.BinaryOperation.And
+                BinaryExpression = FluentGridToolkit.BinaryExpression.And
             },
             new FilterExpression
             {
                 PropertyName = "State",
                 Operator = ComparisonOperator.Equal,
                 Value = "TX",
-                BinaryExpression = FluentGridToolkit.BinaryOperation.And
+                BinaryExpression = FluentGridToolkit.BinaryExpression.And
             },
             new FilterExpression
             {
                 PropertyName = "TotalSales",
                 Operator = ComparisonOperator.GreaterThan,
                 Value = 100.0,
-                BinaryExpression = FluentGridToolkit.BinaryOperation.And
+                BinaryExpression = FluentGridToolkit.BinaryExpression.And
             }
         };
 
@@ -136,14 +136,14 @@ namespace FluentGridToolkit.Tests
                 PropertyName = "State",
                 Operator = ComparisonOperator.Equal,
                 Value = "TX",
-                BinaryExpression = FluentGridToolkit.BinaryOperation.Or
+                BinaryExpression = FluentGridToolkit.BinaryExpression.Or
             },
             new FilterExpression
             {
                 PropertyName = "State",
                 Operator = ComparisonOperator.Equal,
                 Value = "NY",
-                BinaryExpression = FluentGridToolkit.BinaryOperation.Or
+                BinaryExpression = FluentGridToolkit.BinaryExpression.Or
             }
         };
 
@@ -168,7 +168,7 @@ namespace FluentGridToolkit.Tests
                 PropertyName = "Name",
                 MethodName = "NonExistentMethod",
                 Value = "John",
-                BinaryExpression = FluentGridToolkit.BinaryOperation.And
+                BinaryExpression = FluentGridToolkit.BinaryExpression.And
             }
         };
 
@@ -199,14 +199,14 @@ namespace FluentGridToolkit.Tests
             PropertyName = "State",
             Operator = ComparisonOperator.Equal,
             Value = "TX",
-            BinaryExpression = BinaryOperation.AndAlso
+            BinaryExpression = FluentGridToolkit.BinaryExpression.AndAlso
         },
         new FilterExpression
         {
             PropertyName = "TotalSales",
             Operator = ComparisonOperator.GreaterThan,
             Value = 100.0,
-            BinaryExpression = BinaryOperation.AndAlso
+            BinaryExpression = FluentGridToolkit.BinaryExpression.AndAlso
         }
     };
 
@@ -233,14 +233,14 @@ namespace FluentGridToolkit.Tests
             PropertyName = "State",
             Operator = ComparisonOperator.Equal,
             Value = "CA",
-            BinaryExpression = BinaryOperation.OrElse
+            BinaryExpression = FluentGridToolkit.BinaryExpression.OrElse
         },
         new FilterExpression
         {
             PropertyName = "State",
             Operator = ComparisonOperator.Equal,
             Value = "NY",
-            BinaryExpression = BinaryOperation.OrElse
+            BinaryExpression = FluentGridToolkit.BinaryExpression.OrElse
         }
     };
 
@@ -267,7 +267,7 @@ namespace FluentGridToolkit.Tests
             PropertyName = "Name",
             MethodName = "Contains",
             Value = "bro",
-            BinaryExpression = BinaryOperation.And,
+            BinaryExpression = FluentGridToolkit.BinaryExpression.And,
             IgnoreCase = true // Enable case-insensitive search
         }
     };
@@ -294,7 +294,7 @@ namespace FluentGridToolkit.Tests
                     PropertyName = "Email",
                     MethodName = "Contains",
                     Value = "bob",
-                    BinaryExpression = BinaryOperation.And,
+                    BinaryExpression = FluentGridToolkit.BinaryExpression.And,
                     IgnoreCase = true // Enable case-insensitive search
                 }
             };
@@ -324,7 +324,7 @@ namespace FluentGridToolkit.Tests
             PropertyName = "Name",
             MethodName = "Contains",
             Value = "bro",
-            BinaryExpression = BinaryOperation.And,
+            BinaryExpression = FluentGridToolkit.BinaryExpression.And,
             IgnoreCase = true // Enable case-insensitive search
         }
     };
@@ -352,7 +352,7 @@ namespace FluentGridToolkit.Tests
                     PropertyName = "State",
                     Operator = ComparisonOperator.Equal,
                     Value = "TX",
-                    BinaryExpression = BinaryOperation.And
+                    BinaryExpression = FluentGridToolkit.BinaryExpression.And
                 }
             };
 
