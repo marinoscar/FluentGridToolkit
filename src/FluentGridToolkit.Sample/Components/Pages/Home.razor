@@ -9,6 +9,7 @@
 <h1>DataGid Example</h1>
 
 <FluentDataGrid Items="@filterManager.Data" ShowHover="true"
+                Pagination="@pagination"
 ResizableColumns=true>
     <PropertyColumn Property="@(p => p.Name)" Title="Name" Sortable="true">
         <ColumnOptions>
@@ -43,8 +44,10 @@ ResizableColumns=true>
         </ColumnOptions>
     </PropertyColumn>
 </FluentDataGrid>
+<FluentPaginator State="@pagination" />
 
 @code{
+    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
     private FluentGridFilterManager<Account> filterManager = default;
 
     private PropertyColumn<Account, DateTime> dateColumn;
