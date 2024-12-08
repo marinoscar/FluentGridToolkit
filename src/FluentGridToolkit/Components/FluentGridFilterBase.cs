@@ -17,9 +17,9 @@ namespace FluentGridToolkit.Components
         public bool HasError { get; protected set; }
 
         /// <summary>
-        /// Gets the filter expression
+        /// Gets the list of <see cref="FilterExpression"/> to be applied
         /// </summary>
-        public Expression<Func<TGridItem, bool>> FilterExpression { get; private set; } = default!;
+        public List<FilterExpression> FilterExpressions { get; protected set; } = new List<FilterExpression>();
 
         /// <summary>
         /// Gets or sets the <see cref="FluentGridFilterManager{TEntity}"/>
