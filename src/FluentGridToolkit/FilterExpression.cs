@@ -15,18 +15,26 @@ namespace FluentGridToolkit
         /// <summary>
         /// Gets or sets the name of the property to filter on.
         /// </summary>
+        /// <remarks>
+        /// The property name must match the name of a property in the target type being filtered.
+        /// </remarks>
         public string PropertyName { get; set; }
 
         /// <summary>
         /// Gets or sets the binary expression used to combine this filter with others.
         /// </summary>
+        /// <remarks>
+        /// Determines how this filter will be logically combined with other filters in the query.
+        /// For example, <see cref="BinaryExpression.And"/> combines this filter with another using a logical AND operation.
+        /// </remarks>
         public BinaryExpression BinaryExpression { get; set; }
 
         /// <summary>
         /// Gets or sets the value to compare against the property.
         /// </summary>
         /// <remarks>
-        /// The type of this value should match the type of the property being filtered.
+        /// The type of this value should match the type of the property being filtered. For example, 
+        /// if the property is of type <c>int</c>, this value should also be an <c>int</c>.
         /// </remarks>
         public object Value { get; set; }
 
@@ -34,10 +42,22 @@ namespace FluentGridToolkit
         /// Gets or sets the name of a method to invoke on the property for evaluation.
         /// </summary>
         /// <remarks>
-        /// This is optional and is typically used for methods such as <see cref="string.Contains"/> or <see cref="string.StartsWith"/>.
-        /// If not set, default comparison operators will be used.
+        /// This is optional and is typically used for string methods such as <see cref="string.Contains"/>,
+        /// <see cref="string.StartsWith"/>, or <see cref="string.EndsWith"/>. 
+        /// If not set, the filter will use the specified <see cref="Operator"/> to evaluate the comparison.
         /// </remarks>
         public string MethodName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the comparison operator used to evaluate the filter.
+        /// </summary>
+        /// <remarks>
+        /// This property is optional. If set, it specifies the type of comparison to perform, such as 
+        /// <see cref="ComparisonOperator.GreaterThan"/> or <see cref="ComparisonOperator.LessThan"/>.
+        /// If both <see cref="Operator"/> and <see cref="MethodName"/> are provided, 
+        /// the <see cref="MethodName"/> takes precedence.
+        /// </remarks>
+        public ComparisonOperator? Operator { get; set; }
     }
 
 }

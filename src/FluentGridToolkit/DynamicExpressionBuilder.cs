@@ -7,40 +7,46 @@ using System.Threading.Tasks;
 
 namespace FluentGridToolkit
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
+
     /// <summary>
-    /// Provides functionality for dynamically building LINQ expressions based on filter criteria.
+    /// A static utility class for dynamically building LINQ expressions based on filter criteria.
     /// </summary>
     public static class DynamicExpressionBuilder
     {
         /// <summary>
-        /// Builds a dynamic LINQ expression based on the provided filter criteria.
+        /// Dynamically constructs a LINQ expression for filtering a collection based on a list of filter criteria.
         /// </summary>
-        /// <typeparam name="T">The type of the object being filtered.</typeparam>
-        /// <param name="filters">A list of filter criteria used to construct the expression.</param>
+        /// <typeparam name="T">The type of the objects being filtered.</typeparam>
+        /// <param name="filters">A list of filter criteria represented as <see cref="FilterExpression"/> objects.</param>
         /// <returns>
-        /// A lambda expression of type <see cref="Expression{Func{T, bool}}"/> that can be used for filtering objects of type <typeparamref name="T"/>.
+        /// A lambda expression of type <see cref="Expression{Func{T, bool}}"/> that can be used in LINQ queries to filter objects of type <typeparamref name="T"/>.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if no filters are provided, or if a specified method (e.g., Contains) is not found on the target property type.
+        /// Thrown when:
+        /// <list type="bullet">
+        /// <item>
+        /// <description>No filters are provided in the <paramref name="filters"/> list.</description>
+        /// </item>
+        /// <item>
+        /// <description>A specified method (e.g., <c>Contains</c>) is not found on the target property type.</description>
+        /// </item>
+        /// <item>
+        /// <description>Both <see cref="FilterExpression.MethodName"/> and <see cref="FilterExpression.Operator"/> are unset for a filter.</description>
+        /// </item>
+        /// <item>
+        /// <description>An unsupported <see cref="BinaryExpression"/> or <see cref="ComparisonOperator"/> is encountered.</description>
+        /// </item>
+        /// </list>
         /// </exception>
         /// <remarks>
-        /// The method combines multiple filter expressions using logical operators (e.g., AND, OR).
-        /// If a method name is provided in the filter (e.g., "Contains"), it dynamically invokes that method on the target property.
+        /// This method dynamically combines multiple filter criteria into a single expression. 
+        /// It supports both method-based filters (e.g., <see cref="string.Contains"/> or <see cref="string.StartsWith"/>) 
+        /// and operator-based filters (e.g., <see cref="ComparisonOperator.GreaterThan"/> or <see cref="ComparisonOperator.Equal"/>).
+        /// Logical combinations (e.g., AND, OR) of multiple filters are achieved using the <see cref="BinaryExpression"/> property of each filter.
         /// </remarks>
-        /// <example>
-        /// Example usage:
-        /// <code>
-        /// var filters = new List&lt;FilterExpression&gt;
-        /// {
-        ///     new FilterExpression { PropertyName = "Name", MethodName = "Contains", Value = "John", BinaryExpression = BinaryExpression.And },
-        ///     new FilterExpression { PropertyName = "State", Value = "TX", BinaryExpression = BinaryExpression.And },
-        ///     new FilterExpression { PropertyName = "TotalSales", Value = 100.0, BinaryExpression = BinaryExpression.And }
-        /// };
-        ///
-        /// var predicate = DynamicExpressionBuilder.BuildExpression&lt;Account&gt;(filters);
-        /// var filteredAccounts = accounts.AsQueryable().Where(predicate).ToList();
-        /// </code>
-        /// </example>
         public static Expression<Func<T, bool>> BuildExpression<T>(List<FilterExpression> filters)
         {
             var parameter = Expression.Parameter(typeof(T), "x");
@@ -56,19 +62,32 @@ namespace FluentGridToolkit
 
                 Expression condition;
 
-                // Handle method calls like Contains
                 if (!string.IsNullOrEmpty(filter.MethodName))
                 {
+                    // Handle method calls like Contains
                     var method = typeof(string).GetMethod(filter.MethodName, new[] { typeof(string) });
                     if (method == null)
                         throw new InvalidOperationException($"Method '{filter.MethodName}' not found on type '{typeof(string)}'.");
 
                     condition = Expression.Call(property, method, constant);
                 }
+                else if (filter.Operator.HasValue)
+                {
+                    // Handle comparison operators
+                    condition = filter.Operator switch
+                    {
+                        ComparisonOperator.Equal => Expression.Equal(property, constant),
+                        ComparisonOperator.NotEqual => Expression.NotEqual(property, constant),
+                        ComparisonOperator.GreaterThan => Expression.GreaterThan(property, constant),
+                        ComparisonOperator.GreaterThanOrEqual => Expression.GreaterThanOrEqual(property, constant),
+                        ComparisonOperator.LessThan => Expression.LessThan(property, constant),
+                        ComparisonOperator.LessThanOrEqual => Expression.LessThanOrEqual(property, constant),
+                        _ => throw new NotSupportedException($"Operator '{filter.Operator}' is not supported.")
+                    };
+                }
                 else
                 {
-                    // Default comparison
-                    condition = Expression.Equal(property, constant); // Adjust as needed for other operators
+                    throw new InvalidOperationException("Filter must specify either a MethodName or an Operator.");
                 }
 
                 // Combine expressions
@@ -100,5 +119,6 @@ namespace FluentGridToolkit
             return Expression.Lambda<Func<T, bool>>(combinedExpression, parameter);
         }
     }
+
 
 }

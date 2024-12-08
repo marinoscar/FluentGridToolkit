@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,7 +16,8 @@ namespace FluentGridToolkit
     public class FluentGridFilterManager<TEntity>
     {
         private readonly IQueryable<TEntity> _baseQuery;
-        private readonly Dictionary<string, Expression<Func<TEntity, bool>>> _filters = new();
+
+        private readonly Dictionary<string, List<FilterExpression>> _filters = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FluentGridFilterManager{T}"/> class with the provided base query.
@@ -32,23 +34,10 @@ namespace FluentGridToolkit
         /// </summary>
         public IQueryable<TEntity> Data => ApplyFilters();
 
-        /// <summary>
-        /// Adds a new filter or updates an existing filter for a specific column or property.
-        /// </summary>
-        /// <param name="column">The name of the column or property to filter.</param>
-        /// <param name="filter">The filtering logic as a LINQ expression.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="column"/> or <paramref name="filter"/> is null.
-        /// </exception>
-        /// <remarks>
-        /// If a filter already exists for the specified column, it will be overwritten with the new filter.
-        /// </remarks>
-        public void AddOrUpdateFilter(string column, Expression<Func<TEntity, bool>> filter)
+        
+        public void AddOrUpdateFilter(string column, List<FilterExpression> filters)
         {
-            if (column == null) throw new ArgumentNullException(nameof(column), "Column name cannot be null.");
-            if (filter == null) throw new ArgumentNullException(nameof(filter), "Filter expression cannot be null.");
-
-            _filters[column] = filter;
+            _filters[column] = filters;
         }
 
         /// <summary>
@@ -87,12 +76,11 @@ namespace FluentGridToolkit
         public IQueryable<TEntity> ApplyFilters()
         {
             IQueryable<TEntity> query = _baseQuery;
+            var filters = _filters.Values.SelectMany(x => x.ToList()).ToList();
+            var predicate = DynamicExpressionBuilder.BuildExpression<TEntity>(filters);
 
-            foreach (var filter in _filters.Values)
-            {
-                query = query.Where(filter);
-            }
-
+            query = query.Where(predicate);
+            
             return query;
         }
     }

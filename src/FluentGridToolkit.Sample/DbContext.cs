@@ -101,56 +101,6 @@ namespace FluentGridToolkit.Sample
             && (i.TotalSales > amount)
             );
         }
-
-        public static Expression<Func<Account, bool>> BuildSampleExpression(
-        string name,
-        string state,
-        DateTime dateTime,
-        double amount)
-        {
-            var param = Expression.Parameter(typeof(Account), "i");
-
-            // i.Name.Contains(name)
-            var nameProperty = Expression.Property(param, nameof(Account.Name));
-            var nameValue = Expression.Constant(name, typeof(string));
-            var containsMethod = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) });
-            var nameCondition = Expression.Call(nameProperty, containsMethod, nameValue);
-
-            // i.AccountCreatedDate > dateTime && i.AccountCreatedDate <= dateTime
-            var accountCreatedDateProperty = Expression.Property(param, nameof(Account.AccountCreatedDate));
-            var dateValue = Expression.Constant(dateTime, typeof(DateTime));
-            var greaterThan = Expression.GreaterThan(accountCreatedDateProperty, dateValue);
-            var lessThanOrEqual = Expression.LessThanOrEqual(accountCreatedDateProperty, dateValue);
-            var dateCondition = Expression.AndAlso(greaterThan, lessThanOrEqual);
-
-            // i.State == state
-            var stateProperty = Expression.Property(param, nameof(Account.State));
-            var stateValue = Expression.Constant(state, typeof(string));
-            var stateCondition = Expression.Equal(stateProperty, stateValue);
-
-            // i.TotalSales > amount
-            var totalSalesProperty = Expression.Property(param, nameof(Account.TotalSales));
-            var amountValue = Expression.Constant(amount, typeof(double));
-            var salesCondition = Expression.GreaterThan(totalSalesProperty, amountValue);
-
-            // Combine all conditions with &&
-            var combinedCondition = Expression.AndAlso(
-                nameCondition,
-                Expression.AndAlso(dateCondition,
-                    Expression.AndAlso(stateCondition, salesCondition)));
-            // Build the final expression tree
-            return Expression.Lambda<Func<Account, bool>>(combinedCondition, param);
-        }
-    }
-
-    public enum BinaryExpression { And, AndAlso, Or, OrElse }
-   
-    public class FilterExpression<TProperty> {
-        public string PropertyName { get; set; }
-        public BinaryExpression BinaryExpression { get; set; }
-        public TProperty Value { get; set; }
-        public string MethodName { get; set; }
-
     }
 
 

@@ -40,8 +40,15 @@ namespace FluentGridToolkit.Components
         /// </summary>
         private async Task HandleSearch()
         {
-            var expression = CreateExpression();
-            FilterManager.AddOrUpdateFilter(ColumnName, expression);
+
+            FilterManager.AddOrUpdateFilter(ColumnName, new List<FilterExpression>() {
+                new FilterExpression(){ 
+                    PropertyName = Property.Name,
+                    Value = SearchText,
+                    BinaryExpression = BinaryExpression.And,
+                    MethodName = nameof(string.Contains)
+                }
+            });
 
             if (OnSearchClicked.HasDelegate)
             {
@@ -70,40 +77,6 @@ namespace FluentGridToolkit.Components
         {
             if (OnValueChanged.HasDelegate)
                 await OnValueChanged.InvokeAsync(SearchText);
-        }
-
-        /// <summary>
-        /// Builds a filter expression of type Expression<Func<TGridItem, bool>> based on the property and value.
-        /// </summary>
-        /// <returns>The filter expression.</returns>
-        public Expression<Func<TGridItem, bool>> CreateExpression()
-        {
-            if (Property == null)
-                throw new InvalidOperationException("Property expression must be set before building the filter.");
-
-            if (typeof(TProp) != typeof(string))
-                throw new InvalidOperationException("This filter only supports string properties.");
-
-            // Parameter for the lambda expression (TGridItem entity)
-            var parameter = Expression.Parameter(typeof(TGridItem));
-
-            // Access the property on the entity
-            var propertyAccess = Expression.Invoke(Property, parameter);
-
-            // Convert property to ToLower()
-            var toLowerMethod = typeof(string).GetMethod("ToLower", Type.EmptyTypes);
-            var propertyToLower = Expression.Call(propertyAccess, toLowerMethod);
-
-            // Convert PropertyValue to ToLower()
-            var propertyValueConstant = Expression.Constant(SearchText, typeof(TProp));
-            var propertyValueToLower = Expression.Call(propertyValueConstant, toLowerMethod);
-
-            // Build the Contains expression
-            var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
-            var containsExpression = Expression.Call(propertyToLower, containsMethod, propertyValueToLower);
-
-            // Return the complete lambda expression
-            return Expression.Lambda<Func<TGridItem, bool>>(containsExpression, parameter);
         }
     }
 }

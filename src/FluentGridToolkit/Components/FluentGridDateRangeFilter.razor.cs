@@ -74,8 +74,23 @@ namespace FluentGridToolkit.Components
                 return;
             }
             HasError = false;
-            var expression = CreateExpression();
-            FilterManager.AddOrUpdateFilter(ColumnName, expression);
+            var filters = new List<FilterExpression>() {
+                new FilterExpression()
+                {
+                    BinaryExpression = BinaryExpression.And,
+                    Operator = ComparisonOperator.GreaterThan,
+                    PropertyName = Property.Name,
+                    Value = StartDate
+                },
+                new FilterExpression()
+                {
+                    BinaryExpression = BinaryExpression.And,
+                    Operator = ComparisonOperator.LessThanOrEqual,
+                    PropertyName = Property.Name,
+                    Value = EndDate
+                }
+            };
+            FilterManager.AddOrUpdateFilter(ColumnName, filters);
 
             if (OnSearchClicked.HasDelegate)
                 await OnSearchClicked.InvokeAsync((StartDate, EndDate));
@@ -101,37 +116,6 @@ namespace FluentGridToolkit.Components
 
             if (OnValueChanged.HasDelegate)
                 await OnValueChanged.InvokeAsync();
-        }
-
-        /// <summary>
-        /// Generates the expression: this.StartDate > AccountCreatedDate && this.EndDate <= AccountCreatedDate.
-        /// </summary>
-        /// <returns>The generated expression.</returns>
-        /// <exception cref="InvalidOperationException">Thrown if Property is not set.</exception>
-        protected virtual Expression<Func<TGridItem, bool>> CreateExpression()
-        {
-            if (Property == null)
-                throw new InvalidOperationException("The Property expression must be set before creating a comparison expression.");
-
-            // Access the property on the entity
-            var parameter = Expression.Parameter(typeof(TGridItem));
-            var propertyAccess = Expression.Invoke(Property, parameter);
-
-            // Convert Nullable<DateTime> to DateTime for comparisons if necessary
-            //var propertyValue = typeof(TProp) == typeof(DateTime?)
-            //    ? Expression.Property(propertyAccess, "Value")
-            //    : propertyAccess;
-            var propertyValue = propertyAccess;
-
-            // Build the expressions for StartDate and EndDate comparisons
-            var startComparison = Expression.GreaterThan(propertyValue, Expression.Constant(StartDate));
-            var endComparison = Expression.LessThanOrEqual(propertyValue, Expression.Constant(EndDate));
-
-            // Combine expressions with && (AND)
-            var body = Expression.AndAlso(startComparison, endComparison);
-
-            // Return the complete lambda expression
-            return Expression.Lambda<Func<TGridItem, bool>>(body, parameter);
         }
 
     }

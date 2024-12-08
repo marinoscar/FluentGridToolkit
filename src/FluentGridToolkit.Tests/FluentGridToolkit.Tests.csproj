@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FluentGridToolkit.Sample\FluentGridToolkit.Sample.csproj" />
     <ProjectReference Include="..\FluentGridToolkit\FluentGridToolkit.csproj" />
   </ItemGroup>
 

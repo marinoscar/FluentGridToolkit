@@ -37,7 +37,7 @@ namespace FluentGridToolkit.Components
         /// Defines the value to be used in the fiter expression
         /// </summary>
         [Parameter, EditorRequired]
-        public Expression<Func<TGridItem, TProp>> Property { get; set; } = default!;
+        public required Expression<Func<TGridItem, TProp>> Property { get; set; } = default!;
 
 
         /// <summary>
