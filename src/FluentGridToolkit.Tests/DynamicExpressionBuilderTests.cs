@@ -38,7 +38,7 @@ namespace FluentGridToolkit.Tests
                 PropertyName = "Name",
                 MethodName = "Contains",
                 Value = "ice",
-                BinaryExpression = FluentGridToolkit.BinaryExpression.And
+                BinaryExpression = FluentGridToolkit.BinaryOperation.And
             }
         };
 
@@ -64,7 +64,7 @@ namespace FluentGridToolkit.Tests
                 PropertyName = "TotalSales",
                 Operator = ComparisonOperator.GreaterThan,
                 Value = 300.0,
-                BinaryExpression = FluentGridToolkit.BinaryExpression.And
+                BinaryExpression = FluentGridToolkit.BinaryOperation.And
             }
         };
 
@@ -89,28 +89,28 @@ namespace FluentGridToolkit.Tests
                 PropertyName = "Name",
                 MethodName = "Contains",
                 Value = "John",
-                BinaryExpression = FluentGridToolkit.BinaryExpression.And
+                BinaryExpression = FluentGridToolkit.BinaryOperation.And
             },
             new FilterExpression
             {
                 PropertyName = "AccountCreatedDate",
                 Operator = ComparisonOperator.GreaterThan,
                 Value = DateTime.UtcNow.AddMonths(-3),
-                BinaryExpression = FluentGridToolkit.BinaryExpression.And
+                BinaryExpression = FluentGridToolkit.BinaryOperation.And
             },
             new FilterExpression
             {
                 PropertyName = "State",
                 Operator = ComparisonOperator.Equal,
                 Value = "TX",
-                BinaryExpression = FluentGridToolkit.BinaryExpression.And
+                BinaryExpression = FluentGridToolkit.BinaryOperation.And
             },
             new FilterExpression
             {
                 PropertyName = "TotalSales",
                 Operator = ComparisonOperator.GreaterThan,
                 Value = 100.0,
-                BinaryExpression = FluentGridToolkit.BinaryExpression.And
+                BinaryExpression = FluentGridToolkit.BinaryOperation.And
             }
         };
 
@@ -136,14 +136,14 @@ namespace FluentGridToolkit.Tests
                 PropertyName = "State",
                 Operator = ComparisonOperator.Equal,
                 Value = "TX",
-                BinaryExpression = FluentGridToolkit.BinaryExpression.Or
+                BinaryExpression = FluentGridToolkit.BinaryOperation.Or
             },
             new FilterExpression
             {
                 PropertyName = "State",
                 Operator = ComparisonOperator.Equal,
                 Value = "NY",
-                BinaryExpression = FluentGridToolkit.BinaryExpression.Or
+                BinaryExpression = FluentGridToolkit.BinaryOperation.Or
             }
         };
 
@@ -168,7 +168,7 @@ namespace FluentGridToolkit.Tests
                 PropertyName = "Name",
                 MethodName = "NonExistentMethod",
                 Value = "John",
-                BinaryExpression = FluentGridToolkit.BinaryExpression.And
+                BinaryExpression = FluentGridToolkit.BinaryOperation.And
             }
         };
 
@@ -187,6 +187,75 @@ namespace FluentGridToolkit.Tests
             Assert.Throws<InvalidOperationException>(() =>
                 DynamicExpressionBuilder.BuildExpression<Account>(filters));
         }
+
+        [Fact]
+        public void Filter_Accounts_With_AndAlso_Condition()
+        {
+            // Arrange
+            var filters = new List<FilterExpression>
+    {
+        new FilterExpression
+        {
+            PropertyName = "State",
+            Operator = ComparisonOperator.Equal,
+            Value = "TX",
+            BinaryExpression = BinaryOperation.AndAlso
+        },
+        new FilterExpression
+        {
+            PropertyName = "TotalSales",
+            Operator = ComparisonOperator.GreaterThan,
+            Value = 100.0,
+            BinaryExpression = BinaryOperation.AndAlso
+        }
+    };
+
+            var accounts = GetSampleAccounts();
+
+            // Act
+            var predicate = DynamicExpressionBuilder.BuildExpression<Account>(filters);
+            var result = accounts.AsQueryable().Where(predicate).ToList();
+
+            // Assert
+            Assert.Equal(2, result.Count);
+            Assert.All(result, account => Assert.Equal("TX", account.State));
+            Assert.All(result, account => Assert.True(account.TotalSales > 100.0));
+        }
+
+        [Fact]
+        public void Filter_Accounts_With_OrElse_Condition()
+        {
+            // Arrange
+            var filters = new List<FilterExpression>
+    {
+        new FilterExpression
+        {
+            PropertyName = "State",
+            Operator = ComparisonOperator.Equal,
+            Value = "CA",
+            BinaryExpression = BinaryOperation.OrElse
+        },
+        new FilterExpression
+        {
+            PropertyName = "State",
+            Operator = ComparisonOperator.Equal,
+            Value = "NY",
+            BinaryExpression = BinaryOperation.OrElse
+        }
+    };
+
+            var accounts = GetSampleAccounts();
+
+            // Act
+            var predicate = DynamicExpressionBuilder.BuildExpression<Account>(filters);
+            var result = accounts.AsQueryable().Where(predicate).ToList();
+
+            // Assert
+            Assert.Equal(2, result.Count);
+            Assert.Contains(result, account => account.State == "CA");
+            Assert.Contains(result, account => account.State == "NY");
+        }
+
     }
 
 }

@@ -77,14 +77,14 @@ namespace FluentGridToolkit.Components
             var filters = new List<FilterExpression>() {
                 new FilterExpression()
                 {
-                    BinaryExpression = BinaryExpression.And,
+                    BinaryExpression = BinaryOperation.And,
                     Operator = ComparisonOperator.GreaterThan,
                     PropertyName = Property.Name,
                     Value = StartDate
                 },
                 new FilterExpression()
                 {
-                    BinaryExpression = BinaryExpression.And,
+                    BinaryExpression = BinaryOperation.And,
                     Operator = ComparisonOperator.LessThanOrEqual,
                     PropertyName = Property.Name,
                     Value = EndDate

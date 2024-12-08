@@ -45,7 +45,7 @@ namespace FluentGridToolkit.Components
                 new FilterExpression(){ 
                     PropertyName = Property.Name,
                     Value = SearchText,
-                    BinaryExpression = BinaryExpression.And,
+                    BinaryExpression = BinaryOperation.And,
                     MethodName = nameof(string.Contains)
                 }
             });

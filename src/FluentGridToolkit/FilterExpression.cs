@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,9 +26,9 @@ namespace FluentGridToolkit
         /// </summary>
         /// <remarks>
         /// Determines how this filter will be logically combined with other filters in the query.
-        /// For example, <see cref="BinaryExpression.And"/> combines this filter with another using a logical AND operation.
+        /// For example, <see cref="BinaryOperation.And"/> combines this filter with another using a logical AND operation.
         /// </remarks>
-        public BinaryExpression BinaryExpression { get; set; }
+        public BinaryOperation BinaryExpression { get; set; }
 
         /// <summary>
         /// Gets or sets the value to compare against the property.
@@ -58,6 +59,11 @@ namespace FluentGridToolkit
         /// the <see cref="MethodName"/> takes precedence.
         /// </remarks>
         public ComparisonOperator? Operator { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value to indicate if the string comparison should ignore the case
+        /// </summary>
+        public bool IgnoreCase { get; set; } = false; // Default to case-sensitive
     }
 
 }
