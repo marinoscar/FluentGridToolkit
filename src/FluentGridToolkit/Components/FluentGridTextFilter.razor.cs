@@ -29,17 +29,6 @@ namespace FluentGridToolkit.Components
         [Parameter]
         public string InputStyle { get; set; } = "flex: 1;";
 
-        /// <summary>
-        /// Event callback triggered when the search button is clicked.
-        /// </summary>
-        [Parameter]
-        public EventCallback<string> OnSearchClicked { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value to determined if the text search will igonre casing or it would be case sensitive
-        /// </summary>
-        [Parameter]
-        public bool IgnoreCase { get; set; } = true;
 
         /// <summary>
         /// Handles the click event of the search button.
@@ -47,43 +36,8 @@ namespace FluentGridToolkit.Components
         private async Task HandleSearch()
         {
 
-            FilterManager.AddOrUpdateFilter(ColumnName, new List<FilterExpression>() {
-                new FilterExpression(){ 
-                    PropertyName = Property.GetPropertyName(),
-                    Value = SearchText,
-                    BinaryExpression = BinaryExpression.And,
-                    MethodName = nameof(string.Contains),
-                    IgnoreCase = IgnoreCase
-                }
-            });
+            await HandleTextSearch(SearchText);
 
-            if (OnSearchClicked.HasDelegate)
-            {
-                await OnSearchClicked.InvokeAsync(SearchText);
-            }
-            await ValueChanged();
-        }
-
-        /// <summary>
-        /// Handles the click event of the clear button, clearing the search text.
-        /// </summary>
-        private async Task OnClear()
-        {
-            SearchText = string.Empty; // Automatically clear the search text
-            FilterManager.RemoveFilter(ColumnName);
-            if (OnClearClicked.HasDelegate)
-                await OnClearClicked.InvokeAsync();
-            await ValueChanged();
-        }
-
-        /// <summary>
-        /// Handles when the search value changed
-        /// </summary>
-        /// <returns></returns>
-        private async Task ValueChanged()
-        {
-            if (OnValueChanged.HasDelegate)
-                await OnValueChanged.InvokeAsync(SearchText);
         }
     }
 }

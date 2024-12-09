@@ -16,7 +16,7 @@
     <!-- Button with Search Icon -->
     @if (ShowSearchButton)
     {
-        <FluentButton Appearance="@SearchButtonAppearance" @onclick=@(() => Console.WriteLine(""))>
+        <FluentButton Appearance="@SearchButtonAppearance" @onclick=@HandleSearch>
             <FluentIcon Value="@SearchIcon" />
         </FluentButton>
     }
@@ -24,7 +24,7 @@
     <!-- Button with Clear Icon -->
     @if (ShowClearButton)
     {
-        <FluentButton Appearance="@ClearButtonAppearance" @onclick=@(() => Console.WriteLine(""))>
+        <FluentButton Appearance="@ClearButtonAppearance" @onclick=@OnClear>
             <FluentIcon Value="@ClearIcon" />
         </FluentButton>
     }
@@ -39,6 +39,9 @@
     /// </summary>
     public string SelectedValue { get; protected set; } = default;
 
+    /// <summary>
+    /// Gets or sets the items from the grid that will be used to populate the list
+    /// </summary>
     [Parameter]
     public required IQueryable<TGridItem> GridItems { get; set; }
 
@@ -50,6 +53,16 @@
     protected override void OnInitialized()
     {
         Items = GridItems.Select(Property);
+    }
+
+    /// <summary>
+    /// Handles the click event of the search button.
+    /// </summary>
+    private async Task HandleSearch()
+    {
+
+        await HandleTextSearch(SelectedValue);
+
     }
 
 }

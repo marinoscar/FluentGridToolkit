@@ -53,6 +53,12 @@ namespace FluentGridToolkit.Components
         public EventCallback OnValueChanged { get; set; }
 
         /// <summary>
+        /// Event callback triggered when the search button is clicked.
+        /// </summary>
+        [Parameter]
+        public EventCallback<string> OnSearchClicked { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the search button should be displayed.
         /// </summary>
         [Parameter]
@@ -99,6 +105,58 @@ namespace FluentGridToolkit.Components
         /// </summary>
         [Parameter]
         public string ClearButtonTooltip { get; set; } = "Clear Filters";
+
+        /// <summary>
+        /// Gets or sets the value to determined if the text search will igonre casing or it would be case sensitive
+        /// </summary>
+        [Parameter]
+        public bool IgnoreCase { get; set; } = true;
+
+
+        /// <summary>
+        /// Handles the click event of the clear button, clearing the search text.
+        /// </summary>
+        protected virtual async Task OnClear()
+        {
+            FilterManager.RemoveFilter(ColumnName);
+            if (OnClearClicked.HasDelegate)
+                await OnClearClicked.InvokeAsync();
+            await ValueChanged();
+        }
+
+        /// <summary>
+        /// Handles when the search value changed
+        /// </summary>
+        /// <returns></returns>
+        protected virtual async Task ValueChanged()
+        {
+            if (OnValueChanged.HasDelegate)
+                await OnValueChanged.InvokeAsync();
+        }
+
+        /// <summary>
+        /// Handles the click event of the search button.
+        /// </summary>
+        protected async Task HandleTextSearch(string searchValue)
+        {
+
+            FilterManager.AddOrUpdateFilter(ColumnName, new List<FilterExpression>() {
+                new FilterExpression(){
+                    PropertyName = Property.GetPropertyName(),
+                    Value = searchValue,
+                    BinaryExpression = BinaryExpression.And,
+                    MethodName = nameof(string.Contains),
+                    IgnoreCase = IgnoreCase
+                }
+            });
+
+            if (OnSearchClicked.HasDelegate)
+            {
+                await OnSearchClicked.InvokeAsync(searchValue);
+            }
+            await ValueChanged();
+        }
+
 
 
     }
