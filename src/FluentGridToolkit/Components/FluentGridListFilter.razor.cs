@@ -8,6 +8,5 @@ namespace FluentGridToolkit.Components
 {
     public partial class FluentGridListFilter<TGridItem, TProp> : FluentGridFilterBase<TGridItem, TProp>
     {
-
     }
 }

@@ -33,7 +33,23 @@
 
 @code {
 
-    public string SelectedValue { get; set; } = default;
-    public List<TProp> Items { get; set; } = new();
+
+    /// <summary>
+    /// Gets the selected value
+    /// </summary>
+    public string SelectedValue { get; protected set; } = default;
+
+    [Parameter]
+    public required IQueryable<TGridItem> GridItems { get; set; }
+
+    /// <summary>
+    /// Gets the items in the specified property
+    /// </summary>
+    public IQueryable<TProp> Items { get; private set; }
+
+    protected override void OnInitialized()
+    {
+        Items = GridItems.Select(Property);
+    }
 
 }
