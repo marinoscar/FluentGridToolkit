@@ -16,7 +16,9 @@ ResizableColumns=true>
     <PropertyColumn Property="@(p => p.Name)" Title="Name" Sortable="true">
         <ColumnOptions>
             <div class="search-box">
-                <FluentGridTextFilter Property="@(p => p.Name)" FilterManager="@filterManager" ColumnName="Name" OnValueChanged="OnFilterChange" />
+                <FluentGridTextFilter Property="@(p => p.Name)" FilterManager="@filterManager" 
+                                      ColumnName="Name" IgnoreCase="true"
+                                      OnValueChanged="OnFilterChange" />
             </div>
         </ColumnOptions>
     </PropertyColumn>
@@ -32,16 +34,19 @@ ResizableColumns=true>
             </div>
         </ColumnOptions>
     </PropertyColumn>
-    <PropertyColumn @ref="dateColumn" Property="@(p => p.AccountCreatedDate)" Title="Open Date" Format="yyyy-MM-dd" Sortable="true">
+    <PropertyColumn Property="@(p => p.AccountCreatedDate)" Title="Open Date" Format="yyyy-MM-dd" Sortable="true">
         <ColumnOptions>
             <div class="search-box">
-                <FluentGridDateRangeFilter Property="@(dateColumn.Property)" ColumnName="@dateColumn.Title" FilterManager="@filterManager" OnValueChanged="OnFilterChange" />
+                <FluentGridDateRangeFilter Property="@(p => p.AccountCreatedDate)" ColumnName="Date" FilterManager="@filterManager" OnValueChanged="OnFilterChange" />
             </div>
         </ColumnOptions>
     </PropertyColumn>
     <PropertyColumn Property="@(p => p.State)" Title="State" Sortable="true">
         <ColumnOptions>
             <div class="search-box">
+                <FluentGridListFilter GridItems="@filterManager.Data" Property="@(p => p.State)" ColumnName="State">
+
+                </FluentGridListFilter>
             </div>
         </ColumnOptions>
     </PropertyColumn>
@@ -51,8 +56,6 @@ ResizableColumns=true>
 @code{
     PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
     private FluentGridFilterManager<Account> filterManager = default;
-
-    private PropertyColumn<Account, DateTime> dateColumn;
 
     protected override void OnInitialized()
     {
