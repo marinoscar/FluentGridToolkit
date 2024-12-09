@@ -5,12 +5,12 @@
 @typeparam TGridItem
 @typeparam TProp
 <FluentStack Orientation="Orientation.Vertical">
-    <FluentCombobox Placeholder="Make a selection..."
+    <FluentCombobox Placeholder="@Placeholder"
                     Items="@Items"
-                    Label="Best song"
+                    Label="@Label"
                     Autofocus="true"
                     @bind-Value="@SelectedValue"
-                    Height="200px"
+                    Height="@ComboboxHeight"
                     Immediate ImmediateDelay="100" />
 
     <FluentStack HorizontalAlignment="HorizontalAlignment.End" Gap="10px">
@@ -35,36 +35,5 @@
 
 @code {
 
-
-    /// <summary>
-    /// Gets the selected value
-    /// </summary>
-    public string SelectedValue { get; protected set; } = default;
-
-    /// <summary>
-    /// Gets or sets the items from the grid that will be used to populate the list
-    /// </summary>
-    [Parameter]
-    public required IQueryable<TGridItem> GridItems { get; set; }
-
-    /// <summary>
-    /// Gets the items in the specified property
-    /// </summary>
-    public IQueryable<TProp> Items { get; private set; }
-
-    protected override void OnInitialized()
-    {
-        Items = GridItems.Select(Property).Distinct();
-    }
-
-    /// <summary>
-    /// Handles the click event of the search button.
-    /// </summary>
-    private async Task HandleSearch()
-    {
-
-        await HandleTextSearch(SelectedValue);
-
-    }
 
 }
