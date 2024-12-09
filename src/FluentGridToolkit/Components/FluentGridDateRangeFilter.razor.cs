@@ -90,7 +90,7 @@ namespace FluentGridToolkit.Components
                     Value = EndDate
                 }
             };
-            FilterManager.AddOrUpdateFilter(ColumnName, filters);
+            FilterManager.AddOrUpdateFilter(Property.GetPropertyName(), filters);
 
             if (OnSearchClicked.HasDelegate)
                 await OnSearchClicked.InvokeAsync((StartDate, EndDate));
@@ -109,7 +109,7 @@ namespace FluentGridToolkit.Components
             EndDate = null;
 
             //Clears the filter
-            FilterManager.RemoveFilter(ColumnName);
+            FilterManager.RemoveFilter(Property.GetPropertyName());
 
             if (OnClearClicked.HasDelegate)
                 await OnClearClicked.InvokeAsync();

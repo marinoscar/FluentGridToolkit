@@ -23,12 +23,6 @@ namespace FluentGridToolkit.Components
         public required FluentGridFilterManager<TGridItem> FilterManager { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the column to which the filter is applied
-        /// </summary>
-        [Parameter]
-        public required string ColumnName { get; set; }
-
-        /// <summary>
         /// Defines the value to be used in the fiter expression
         /// </summary>
         [Parameter, EditorRequired]
@@ -113,7 +107,7 @@ namespace FluentGridToolkit.Components
         /// </summary>
         protected virtual async Task OnClear()
         {
-            FilterManager.RemoveFilter(ColumnName);
+            FilterManager.RemoveFilter(Property.GetPropertyName());
             if (OnClearClicked.HasDelegate)
                 await OnClearClicked.InvokeAsync();
             await ValueChanged();
@@ -135,7 +129,7 @@ namespace FluentGridToolkit.Components
         protected async Task HandleTextSearch(string searchValue)
         {
 
-            FilterManager.AddOrUpdateFilter(ColumnName, new List<FilterExpression>() {
+            FilterManager.AddOrUpdateFilter(Property.GetPropertyName(), new List<FilterExpression>() {
                 new FilterExpression(){
                     PropertyName = Property.GetPropertyName(),
                     Value = searchValue,

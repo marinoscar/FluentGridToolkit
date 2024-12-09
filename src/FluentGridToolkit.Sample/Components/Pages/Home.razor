@@ -17,7 +17,7 @@ ResizableColumns=true>
         <ColumnOptions>
             <div class="search-box">
                 <FluentGridTextFilter Property="@(p => p.Name)" FilterManager="@filterManager" 
-                                      ColumnName="Name" IgnoreCase="true"
+                                     IgnoreCase="true"
                                       OnValueChanged="OnFilterChange" />
             </div>
         </ColumnOptions>
@@ -37,14 +37,14 @@ ResizableColumns=true>
     <PropertyColumn Property="@(p => p.AccountCreatedDate)" Title="Open Date" Format="yyyy-MM-dd" Sortable="true">
         <ColumnOptions>
             <div class="search-box">
-                <FluentGridDateRangeFilter Property="@(p => p.AccountCreatedDate)" ColumnName="Date" FilterManager="@filterManager" OnValueChanged="OnFilterChange" />
+                <FluentGridDateRangeFilter Property="@(p => p.AccountCreatedDate)" FilterManager="@filterManager" OnValueChanged="OnFilterChange" />
             </div>
         </ColumnOptions>
     </PropertyColumn>
     <PropertyColumn Property="@(p => p.State)" Title="State" Sortable="true">
         <ColumnOptions>
             <div class="search-box">
-                <FluentGridListFilter GridItems="@filterManager.Data" Property="@(p => p.State)" ColumnName="State">
+                <FluentGridListFilter GridItems="@filterManager.Data" Property="@(p => p.State)" >
 
                 </FluentGridListFilter>
             </div>
