@@ -53,15 +53,6 @@ namespace FluentGridToolkit.Components
         public string EndDateAriaLabel { get; set; } = "End Date Picker";
 
         /// <summary>
-        /// Event callback invoked when the search button is clicked.
-        /// </summary>
-        /// <remarks>
-        /// The callback provides a tuple containing the <see cref="StartDate"/> and <see cref="EndDate"/> as parameters.
-        /// </remarks>
-        [Parameter]
-        public EventCallback<(DateTime? Start, DateTime? End)> OnSearchClicked { get; set; }
-
-        /// <summary>
         /// Handles the search button click event.
         /// Validates the date range and invokes the <see cref="OnSearchClicked"/> callback.
         /// </summary>
@@ -74,26 +65,27 @@ namespace FluentGridToolkit.Components
                 return;
             }
             HasError = false;
+            var propName = Property.GetPropertyName();
             var filters = new List<FilterExpression>() {
                 new FilterExpression()
                 {
                     BinaryExpression = BinaryExpression.And,
                     Operator = ComparisonOperator.GreaterThan,
-                    PropertyName = Property.Name,
+                    PropertyName = propName,
                     Value = StartDate
                 },
                 new FilterExpression()
                 {
                     BinaryExpression = BinaryExpression.And,
                     Operator = ComparisonOperator.LessThanOrEqual,
-                    PropertyName = Property.Name,
+                    PropertyName = propName,
                     Value = EndDate
                 }
             };
-            FilterManager.AddOrUpdateFilter(Property.GetPropertyName(), filters);
+            FilterManager.AddOrUpdateFilter(propName, filters);
 
             if (OnSearchClicked.HasDelegate)
-                await OnSearchClicked.InvokeAsync((StartDate, EndDate));
+                await OnSearchClicked.InvokeAsync();
 
             if (OnValueChanged.HasDelegate)
                 await OnValueChanged.InvokeAsync();
@@ -103,19 +95,11 @@ namespace FluentGridToolkit.Components
         /// Handles the clear button click event.
         /// Clears the <see cref="StartDate"/> and <see cref="EndDate"/> values and invokes the <see cref="OnClearClicked"/> callback.
         /// </summary>
-        public async Task OnClear()
+        protected override async Task OnClear()
         {
             StartDate = null;
             EndDate = null;
-
-            //Clears the filter
-            FilterManager.RemoveFilter(Property.GetPropertyName());
-
-            if (OnClearClicked.HasDelegate)
-                await OnClearClicked.InvokeAsync();
-
-            if (OnValueChanged.HasDelegate)
-                await OnValueChanged.InvokeAsync();
+            await base.OnClear();
         }
 
     }

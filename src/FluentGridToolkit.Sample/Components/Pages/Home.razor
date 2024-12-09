@@ -44,9 +44,7 @@ ResizableColumns=true>
     <PropertyColumn Property="@(p => p.State)" Title="State" Sortable="true">
         <ColumnOptions>
             <div class="search-box">
-                <FluentGridListFilter GridItems="@filterManager.Data" Property="@(p => p.State)" >
-
-                </FluentGridListFilter>
+                <FluentGridListFilter GridItems="@filterManager.Data" Property="@(p => p.State)" FilterManager="@filterManager" OnValueChanged="OnFilterChange" />
             </div>
         </ColumnOptions>
     </PropertyColumn>

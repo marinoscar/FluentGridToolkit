@@ -13,21 +13,23 @@
                     Height="200px"
                     Immediate ImmediateDelay="100" />
 
-    <!-- Button with Search Icon -->
-    @if (ShowSearchButton)
-    {
-        <FluentButton Appearance="@SearchButtonAppearance" @onclick=@HandleSearch>
-            <FluentIcon Value="@SearchIcon" />
-        </FluentButton>
-    }
+    <FluentStack HorizontalAlignment="HorizontalAlignment.End" Gap="10px">
+        <!-- Button with Search Icon -->
+        @if (ShowSearchButton)
+        {
+            <FluentButton Appearance="@SearchButtonAppearance" @onclick=@HandleSearch>
+                <FluentIcon Value="@SearchIcon" />
+            </FluentButton>
+        }
 
-    <!-- Button with Clear Icon -->
-    @if (ShowClearButton)
-    {
-        <FluentButton Appearance="@ClearButtonAppearance" @onclick=@OnClear>
-            <FluentIcon Value="@ClearIcon" />
-        </FluentButton>
-    }
+        <!-- Button with Clear Icon -->
+        @if (ShowClearButton)
+        {
+            <FluentButton Appearance="@ClearButtonAppearance" @onclick=@OnClear>
+                <FluentIcon Value="@ClearIcon" />
+            </FluentButton>
+        }
+    </FluentStack>
 
 </FluentStack>
 
@@ -52,7 +54,7 @@
 
     protected override void OnInitialized()
     {
-        Items = GridItems.Select(Property);
+        Items = GridItems.Select(Property).Distinct();
     }
 
     /// <summary>
