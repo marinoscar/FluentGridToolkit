@@ -10,48 +10,54 @@
 
 <h1>DataGid Example</h1>
 
-<FluentDataGrid Items="@filterManager.Data" ShowHover="true"
-                Pagination="@pagination"
-ResizableColumns=true>
-    <PropertyColumn Property="@(p => p.Name)" Title="Name" Sortable="true">
-        <ColumnOptions>
-            <div class="search-box">
-                <FluentGridTextFilter Property="@(p => p.Name)" FilterManager="@filterManager" 
-                                     IgnoreCase="true"
-                                      OnValueChanged="OnFilterChange" />
-            </div>
-        </ColumnOptions>
-    </PropertyColumn>
-    <PropertyColumn Property="@(p => p.Email)" Title="Email" Sortable="true">
-        <ColumnOptions>
-            <div class="search-box">
-            </div>
-        </ColumnOptions>
-    </PropertyColumn>
-    <PropertyColumn Property="@(p => p.TotalSales)" Title="Total Sales" Format="N2" Align="Align.End" Sortable="true">
-        <ColumnOptions>
-            <div class="search-box">
-            </div>
-        </ColumnOptions>
-    </PropertyColumn>
-    <PropertyColumn Property="@(p => p.AccountCreatedDate)" Title="Open Date" Format="yyyy-MM-dd" Sortable="true">
-        <ColumnOptions>
-            <div class="search-box">
-                <FluentGridDateRangeFilter Property="@(p => p.AccountCreatedDate)" FilterManager="@filterManager" OnValueChanged="OnFilterChange" />
-            </div>
-        </ColumnOptions>
-    </PropertyColumn>
-    <PropertyColumn Property="@(p => p.State)" Title="State" Sortable="true">
-        <ColumnOptions>
-            <div class="search-box">
-                <FluentGridListFilter GridItems="@filterManager.Data" Property="@(p => p.State)" FilterManager="@filterManager" OnValueChanged="OnFilterChange" />
-            </div>
-        </ColumnOptions>
-    </PropertyColumn>
-</FluentDataGrid>
+@* Provides the filter manager value for all the items in the grid *@
+<CascadingValue Value="@filterManager">
+
+    <FluentDataGrid Items="@filterManager.Data" ShowHover="true"
+                    Pagination="@pagination"
+                    ResizableColumns=true>
+        <PropertyColumn Property="@(p => p.Name)" Title="Name" Sortable="true">
+            <ColumnOptions>
+                <div class="search-box">
+                    <FluentGridTextFilter Property="@(p => p.Name)"
+                                          IgnoreCase="true"
+                                          OnValueChanged="OnFilterChange" />
+                </div>
+            </ColumnOptions>
+        </PropertyColumn>
+        <PropertyColumn Property="@(p => p.Email)" Title="Email" Sortable="true">
+            <ColumnOptions>
+                <div class="search-box">
+                </div>
+            </ColumnOptions>
+        </PropertyColumn>
+        <PropertyColumn Property="@(p => p.TotalSales)" Title="Total Sales" Format="N2" Align="Align.End" Sortable="true">
+            <ColumnOptions>
+                <div class="search-box">
+                </div>
+            </ColumnOptions>
+        </PropertyColumn>
+        <PropertyColumn Property="@(p => p.AccountCreatedDate)" Title="Open Date" Format="yyyy-MM-dd" Sortable="true">
+            <ColumnOptions>
+                <div class="search-box">
+                    <FluentGridDateRangeFilter Property="@(p => p.AccountCreatedDate)" OnValueChanged="OnFilterChange" />
+                </div>
+            </ColumnOptions>
+        </PropertyColumn>
+        <PropertyColumn Property="@(p => p.State)" Title="State" Sortable="true">
+            <ColumnOptions>
+                <div class="search-box">
+                    <FluentGridListFilter GridItems="@filterManager.Data" Property="@(p => p.State)" OnValueChanged="OnFilterChange" />
+                </div>
+            </ColumnOptions>
+        </PropertyColumn>
+    </FluentDataGrid>
+
+</CascadingValue>
+
 <FluentPaginator State="@pagination" />
 
-@code{
+@code {
     PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
     private FluentGridFilterManager<Account> filterManager = default;
 
@@ -60,7 +66,8 @@ ResizableColumns=true>
         filterManager = new FluentGridFilterManager<Account>(dbContext.Accounts);
     }
 
-    private void OnFilterChange(){
+    private void OnFilterChange()
+    {
         filterManager.ApplyFilters();
     }
 }

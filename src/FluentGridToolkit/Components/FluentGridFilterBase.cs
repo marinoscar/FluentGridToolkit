@@ -19,7 +19,7 @@ namespace FluentGridToolkit.Components
         /// <summary>
         /// Gets or sets the <see cref="FluentGridFilterManager{TEntity}"/>
         /// </summary>
-        [Parameter]
+        [CascadingParameter]
         public required FluentGridFilterManager<TGridItem> FilterManager { get; set; }
 
         /// <summary>
