@@ -34,6 +34,7 @@
         <PropertyColumn Property="@(p => p.TotalSales)" Title="Total Sales" Format="N2" Align="Align.End" Sortable="true">
             <ColumnOptions>
                 <div class="search-box">
+                    <FluentGridNumericFilter Property="@(p => p.TotalSales)" OnValueChanged="OnFilterChange" />
                 </div>
             </ColumnOptions>
         </PropertyColumn>

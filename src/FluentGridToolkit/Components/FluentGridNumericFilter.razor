@@ -1,0 +1,108 @@
+﻿@using Microsoft.FluentUI.AspNetCore.Components
+@inherits FluentGridFilterBase<TGridItem, TProp>
+@typeparam TGridItem
+@typeparam TProp
+
+<FluentStack Orientation="Orientation.Vertical">
+
+
+    @* Filter and stack vertically *@
+    @foreach (var filterValue in FilterValues)
+    {
+        <FluentStack VerticalAlignment="VerticalAlignment.Center">
+
+            <FluentStack HorizontalAlignment="HorizontalAlignment.Start">
+                <FluentCombobox Items=@Operator
+                                TOption="Option<ComparisonOperator>"
+                                OptionText="@(i => i.Text)"
+                                OptionValue="@(i => i.Value.ToString())"
+                                Width="150px"
+                                @bind-Value=filterValue.ComparisonOperator />
+            </FluentStack>
+
+            <FluentStack HorizontalAlignment="HorizontalAlignment.Stretch">
+                <FluentTextField Placeholder="Enter value" @bind-Value=filterValue.Value Style="@InputStyle" />
+            </FluentStack>
+
+            <FluentStack HorizontalAlignment="HorizontalAlignment.End">
+                <FluentCombobox Items=@BinaryOptions
+                                TOption="Option<BinaryExpression>"
+                                OptionText="@(i => i.Text)"
+                                OptionValue="@(i => i.Value.ToString())"
+                                Width="100px"
+                                @bind-Value=filterValue.BinaryExpression />
+            </FluentStack>
+
+        </FluentStack>
+    }
+
+    <FluentStack HorizontalAlignment="HorizontalAlignment.End" Gap="10px">
+        <FluentButton @onclick=AddOnMore>
+            More
+        </FluentButton>
+
+        <!-- Button with Search Icon -->
+        @if (ShowSearchButton)
+        {
+            <FluentButton Appearance="@SearchButtonAppearance" Title="@SearchButtonTooltip" @onclick=HandleSearch>
+                <FluentIcon Value="@SearchIcon" />
+            </FluentButton>
+        }
+
+        <!-- Button with Clear Icon -->
+        @if (ShowClearButton)
+        {
+            <FluentButton Appearance="@ClearButtonAppearance" Title="@ClearButtonTooltip" @onclick=OnClear>
+                <FluentIcon Value="@ClearIcon" />
+            </FluentButton>
+        }
+    </FluentStack>
+
+</FluentStack>
+
+@code {
+
+    /// <summary>
+    /// Gets or sets the CSS style for the input box.
+    /// </summary>
+    [Parameter]
+    public string InputStyle { get; set; } = "flex: 1;width:200px";
+
+    private List<FilterValue> FilterValues { get; set; } = new();
+    private List<Option<BinaryExpression>> BinaryOptions { get; set; } = new() {
+        new Option<BinaryExpression>() { Text = "And", Value = BinaryExpression.And },
+        new Option<BinaryExpression>() { Text = "Or", Value = BinaryExpression.Or },
+    };
+
+    private List<Option<ComparisonOperator>> Operator { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        AddOnMore(); //add the first item
+        foreach (var op in Enum.GetNames(typeof(ComparisonOperator)))
+        {
+            Operator.Add(new Option<ComparisonOperator>()
+                {
+                    Text = op,
+                    Value = (ComparisonOperator)Enum.Parse(typeof(ComparisonOperator), op)
+                });
+        }
+    }
+
+    private void HandleSearch(MouseEventArgs e)
+    {
+    }
+
+    private void AddOnMore()
+    {
+        if (!FilterValues.Any())
+        {
+            FilterValues.Add(new FilterValue());
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(FilterValues.Last().Value)) return;
+        FilterValues.Add(new FilterValue());
+        StateHasChanged();
+    }
+
+}
