@@ -36,6 +36,12 @@ namespace FluentGridToolkit.Components
         public EventCallback<string> OnSearchClicked { get; set; }
 
         /// <summary>
+        /// Gets or sets the value to determined if the text search will igonre casing or it would be case sensitive
+        /// </summary>
+        [Parameter]
+        public bool IgnoreCase { get; set; } = true;
+
+        /// <summary>
         /// Handles the click event of the search button.
         /// </summary>
         private async Task HandleSearch()
@@ -43,10 +49,11 @@ namespace FluentGridToolkit.Components
 
             FilterManager.AddOrUpdateFilter(ColumnName, new List<FilterExpression>() {
                 new FilterExpression(){ 
-                    PropertyName = Property.Name,
+                    PropertyName = Property.GetPropertyName(),
                     Value = SearchText,
                     BinaryExpression = BinaryExpression.And,
-                    MethodName = nameof(string.Contains)
+                    MethodName = nameof(string.Contains),
+                    IgnoreCase = IgnoreCase
                 }
             });
 
