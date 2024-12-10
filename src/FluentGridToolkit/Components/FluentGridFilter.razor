@@ -4,7 +4,12 @@
 @typeparam TProp
 
 <FluentStack Orientation="Orientation.Vertical">
-
+    @if (HasError)
+    {
+        <FluentMessageBar itemref="bar" Title="Data Error" Intent="@MessageIntent.Error" AllowDismiss="false">
+            Error: Value is required
+        </FluentMessageBar>
+    }
 
     @* Filter and stack vertically *@
     @foreach (var filterValue in FilterValues)
@@ -21,25 +26,38 @@
             </FluentStack>
 
             <FluentStack HorizontalAlignment="HorizontalAlignment.Stretch">
-                <FluentTextField Placeholder="Enter value" @bind-Value=filterValue.Value Style="@InputStyle" />
+                @switch (DataType)
+                {
+                    case FilterDataType.Numeric:
+                        <FluentNumberField Placeholder="@Placeholder" @bind-Value=filterValue.NumberValue Style="@InputStyle" Required="true" />
+                    break;
+                    case FilterDataType.DateTime:
+                        <FluentDatePicker Placeholder="@Placeholder" @bind-Value=filterValue.DateTimeValue Style="@InputStyle" Required="true" />
+                        break;
+                    default:
+                        <FluentTextField Placeholder="@Placeholder" @bind-Value=filterValue.StringValue Style="@InputStyle" Required="true" />
+                        break;
+                }
             </FluentStack>
 
             <FluentStack HorizontalAlignment="HorizontalAlignment.End">
-                <FluentCombobox Items=@BinaryOptions
-                                TOption="Option<BinaryExpression>"
-                                OptionText="@(i => i.Text)"
-                                OptionValue="@(i => i.Value.ToString())"
-                                Width="100px"
-                                @bind-Value=filterValue.BinaryExpression />
+                <FluentMenuButton Text="+" Items="@items" OnMenuChanged="HandleOnMenuChanged">
+                </FluentMenuButton>
             </FluentStack>
 
+
         </FluentStack>
+
+        @if (filterValue != FilterValues.Last())
+        {
+            <FluentStack HorizontalAlignment="HorizontalAlignment.Center">
+                <span>@filterValue.BinaryExpression?.ToUpper()</span>
+            </FluentStack>
+        }
+
     }
 
     <FluentStack HorizontalAlignment="HorizontalAlignment.End" Gap="10px">
-        <FluentButton @onclick=AddOnMore>
-            More
-        </FluentButton>
 
         <!-- Button with Search Icon -->
         @if (ShowSearchButton)
@@ -57,16 +75,35 @@
             </FluentButton>
         }
     </FluentStack>
-
+    <FluentMenuProvider />
 </FluentStack>
 
 @code {
+
+
+    /// <summary>
+    /// Gets or sets the placeholder text for the input field.
+    /// </summary>
+    [Parameter]
+    public string Placeholder { get; set; } = "Enter text...";
 
     /// <summary>
     /// Gets or sets the CSS style for the input box.
     /// </summary>
     [Parameter]
     public string InputStyle { get; set; } = "flex: 1;width:200px";
+
+    /// <summary>
+    /// Gets or sets the data type that will be subject to filter
+    /// </summary>
+    [Parameter]
+    public required FilterDataType DataType { get; set; } = FilterDataType.Text;
+
+    /// <summary>
+    /// Gets or sets the icon for the plus button.
+    /// </summary>
+    [Parameter]
+    public Icon PlusIcon { get; set; } = new ToolkitIcons.PlusIcon();
 
     private List<FilterValue> FilterValues { get; set; } = new();
     private List<Option<BinaryExpression>> BinaryOptions { get; set; } = new() {
@@ -75,6 +112,14 @@
     };
 
     private List<Option<ComparisonOperator>> Operator { get; set; } = new();
+
+
+    private Dictionary<string, string> items = new Dictionary<string, string>()
+    {
+        {"And","And"},
+        {"Or","Or"},
+    };
+
 
     protected override void OnInitialized()
     {
@@ -89,8 +134,27 @@
         }
     }
 
-    private void HandleSearch(MouseEventArgs e)
+    private async Task HandleSearch(MouseEventArgs e)
     {
+        if (FilterValues.Any(i => i == null))
+        {
+            HasError = true;
+            StateHasChanged();
+        }
+        else HasError = false;
+
+        var propName = Property.GetPropertyName();
+        var filters = FilterValues.Select(i => i.ToFilterExpression(propName, DataType)).ToList();
+
+
+        FilterManager.AddOrUpdateFilter(propName, filters);
+
+        if (OnSearchClicked.HasDelegate)
+            await OnSearchClicked.InvokeAsync();
+
+        if (OnValueChanged.HasDelegate)
+            await OnValueChanged.InvokeAsync();
+
     }
 
     private void AddOnMore()
@@ -100,9 +164,18 @@
             FilterValues.Add(new FilterValue());
             return;
         }
-        if (string.IsNullOrWhiteSpace(FilterValues.Last().Value)) return;
+        if (FilterValues.Last().IsNullValue(DataType)) return;
         FilterValues.Add(new FilterValue());
         StateHasChanged();
+    }
+
+    private void HandleOnMenuChanged(MenuChangeEventArgs args)
+    {
+        if (FilterValues.Any())
+        {
+            FilterValues.Last().BinaryExpression = args.Value == "And" ? "And" : "Or";
+        }
+        AddOnMore();
     }
 
 }
