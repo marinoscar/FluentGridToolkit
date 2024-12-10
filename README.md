@@ -3,7 +3,7 @@
 FluentGridToolkit is a powerful and easy-to-use library designed to extend the functionality of the FluentDataGrid component from Microsoft's Fluent UI. This toolkit provides advanced filtering capabilities for numeric, text, and date range columns, allowing developers to create rich, interactive grids effortlessly.
 
 # Features
-- **FluentGridFilter:** Filters grid data by numeric, text, and date values.
+- **[FluentGridFilter](#FluentGridFilter):** Filters grid data by numeric, text, and date values.
 - **FluentGridTextFilter:** Filters text data containing the specified value.
 - **FluentGridListFilter:** Allows filtering by selecting values from a dropdown list populated by column data.
 - **FluentGridDateRangeFilter:** Filters data based on a date range.
