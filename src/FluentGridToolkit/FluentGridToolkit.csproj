@@ -14,6 +14,8 @@
     <RepositoryType>git</RepositoryType>
     <Authors>Oscar Marin</Authors>
     <Description>FluentGridToolkit is a powerful and easy-to-use library designed to extend the functionality of the FluentDataGrid component from Microsoft's Fluent UI. This toolkit provides advanced filtering capabilities for numeric, text, and date range columns, allowing developers to create rich, interactive grids effortlessly.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
