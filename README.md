@@ -146,7 +146,7 @@ The FluentGridFilter component is a versatile and reusable filter component in t
  ## Usages
 Here are examples of how to use the FluentGridFilter for different data types: Numeric, Text, and DateTime.
 
-1. Numeric Filter
+## 1. Numeric Filter
 Filters numeric data, such as sales figures, prices, or quantities.
 
 ### Usage Example:
@@ -165,7 +165,7 @@ Filters numeric data, such as sales figures, prices, or quantities.
 - **InputStyle:** Optional style customization.
 - **OnValueChanged:** Callback triggered when the filter value changes.
 
-2. Text Filter
+## 2. Text Filter
 Filters text data, such as names, descriptions, or comments.
 
 ### Usage Example:
@@ -184,7 +184,7 @@ Filters text data, such as names, descriptions, or comments.
 - **InputStyle:** Optional style to customize width and layout.
 - **OnValueChanged:** Callback invoked when the text filter value is updated.
 
-3. Date Range Filter
+## 3. Date Range Filter
 Filters data within a date range, such as transaction dates, creation dates, or deadlines.
 
 ### Usage Example:
