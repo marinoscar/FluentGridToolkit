@@ -254,4 +254,46 @@ Here’s a sample grid implementation using all three filters:
 - **Validation:** The component automatically validates filter values and shows an error message if required fields are empty.
 - **Customization:** Adjust icons, styles, and placeholders to fit your application’s design.
 
+# FluentGridTextFilter Component
+The FluentGridTextFilter component is a simple and effective filter designed for text-based columns in a grid. It allows users to filter text data by typing a search term. The component is lightweight, easy to configure, and seamlessly integrates with the FluentDataGrid.
 
+## Features
+- **Text Filtering:** Enables filtering by text, matching values in the specified column.
+- **Search and Clear Buttons:** Provides intuitive buttons for triggering searches and clearing filters.
+- **Customizable Appearance:** Configure placeholders and styles to fit your design requirements.
+- 
+## Parameters
+|Parameter|Type|Description|Default Value|
+|---------|----|-----------|-------------|
+|Placeholder|`string`|Placeholder text displayed in the input field.|`"Enter text..."`|
+|SearchText|`string`|The text entered by the user for filtering.|`""` (empty string)|
+|InputStyle|`string`|CSS style for customizing the input field.|`"flex: 1;"`|
+
+## Basic Example
+```razor
+<FluentGridTextFilter Property="@(p => p.Name)" 
+                      Placeholder="Search by name" 
+                      InputStyle="flex: 1; width: 200px;" 
+                      OnValueChanged="OnFilterChange" />
+Property: Specifies the property to filter (e.g., Name).
+Placeholder: Displays Search by name in the input box.
+InputStyle: Sets a custom width and layout for the filter box.
+OnValueChanged: Invokes a callback when the filter is applied.
+```
+
+## Example in a Grid
+```razor
+<FluentDataGrid Items="@filterManager.Data" ResizableColumns="true">
+    <PropertyColumn Property="@(p => p.Name)" Title="Name" Sortable="true">
+        <ColumnOptions>
+            <FluentGridTextFilter Property="@(p => p.Name)" 
+                                  Placeholder="Filter by name" 
+                                  InputStyle="flex: 1; width: 250px;" 
+                                  OnValueChanged="OnFilterChange" />
+        </ColumnOptions>
+    </PropertyColumn>
+</FluentDataGrid>
+```
+
+- Adds a text filter to the Name column in a grid.
+- Provides an intuitive filtering experience directly within the column options.
