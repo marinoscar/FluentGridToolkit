@@ -126,3 +126,132 @@ In the @code block, manage filtering and pagination state using the FluentGridFi
 - **CascadingValue:** Provides the filter manager value to all child components within the grid.
 - **FluentGridFilterManager:** Handles filtering logic for the data displayed in the grid.
 - **FluentGridFilter Components:** Bind to specific properties and allow filtering based on user input.
+
+# FluentGridFilter Component
+The FluentGridFilter component is a versatile and reusable filter component in the FluentGridToolkit. It allows developers to filter data in a Fluent UI grid based on numeric, text, or date values. It supports multi-condition filtering and provides options to customize the appearance and behavior of the filter.
+
+## Features
+- **Multi-condition Filtering:** Add multiple filter conditions using AND or OR operators.
+- **Data Type Support:** Supports filtering for numeric, text, and date values.
+- **Customizable Appearance:** Configure placeholders, styles, and icons.
+- **Error Handling:** Displays an error message when required fields are empty.
+- **Interactive Buttons:** Includes search and clear buttons for user convenience.
+
+## Parameters
+- Placeholder: The placeholder text for the input field (default: "Enter text...").
+- InputStyle: CSS style for the input box (default: "flex: 1;width:200px").
+- DataType: Specifies the type of data being filtered (e.g., Text, Numeric, DateTime).
+- PlusIcon: Icon for the "+" button (default: ToolkitIcons.PlusIcon).
+
+ ## Usages
+Here are examples of how to use the FluentGridFilter for different data types: Numeric, Text, and DateTime.
+
+1. Numeric Filter
+Filters numeric data, such as sales figures, prices, or quantities.
+
+### Usage Example:
+```razor
+<FluentGridFilter Property="@(p => p.TotalSales)" 
+                  DataType="@FilterDataType.Numeric" 
+                  Placeholder="Enter sales value" 
+                  InputStyle="flex: 1;width:250px" 
+                  OnValueChanged="OnFilterChange" />
+```
+
+### Description:
+- **Property:** Specifies the numeric property to filter (`TotalSales` in this case).
+- **DataType:** Set to `FilterDataType.Numeric` to indicate a numeric filter.
+- **Placeholder:** Placeholder text for the input field.
+- **InputStyle:** Optional style customization.
+- **OnValueChanged:** Callback triggered when the filter value changes.
+
+2. Text Filter
+Filters text data, such as names, descriptions, or comments.
+
+### Usage Example:
+```razor
+<FluentGridFilter Property="@(p => p.Name)" 
+                  DataType="@FilterDataType.Text" 
+                  Placeholder="Enter name" 
+                  InputStyle="flex: 1;width:200px" 
+                  OnValueChanged="OnFilterChange" />
+```
+
+### Description:
+- **Property:** Specifies the text property to filter (Name in this case).
+- **DataType:** Set to FilterDataType.Text for filtering string values.
+- **Placeholder:** Placeholder text for user guidance.
+- **InputStyle:** Optional style to customize width and layout.
+- **OnValueChanged:** Callback invoked when the text filter value is updated.
+
+3. Date Range Filter
+Filters data within a date range, such as transaction dates, creation dates, or deadlines.
+
+### Usage Example:
+```razor
+<FluentGridFilter Property="@(p => p.AccountCreatedDate)" 
+                  DataType="@FilterDataType.DateTime" 
+                  Placeholder="Select a date" 
+                  InputStyle="flex: 1;width:300px" 
+                  OnValueChanged="OnFilterChange" />
+```
+
+### Description:
+- **Property:** Specifies the date property to filter (AccountCreatedDate in this case).
+- **DataType:** Set to FilterDataType.DateTime to enable date range filtering.
+- **Placeholder:** Instructional text displayed in the filter input.
+- **InputStyle:** Style customization for date input fields.
+- **OnValueChanged:** Callback invoked when the date range is changed.
+  
+## Common Callback
+Ensure you handle the OnValueChanged callback in your component to apply filters when the user modifies the filter values:
+
+```razor
+@code {
+    private void OnFilterChange()
+    {
+        // Apply filters and update the grid
+        filterManager.ApplyFilters();
+    }
+}
+```
+
+## Example Grid with Filters
+Here’s a sample grid implementation using all three filters:
+
+```razor
+<FluentDataGrid Items="@filterManager.Data" ShowHover="true" ResizableColumns="true">
+    <PropertyColumn Property="@(p => p.Name)" Title="Name" Sortable="true">
+        <ColumnOptions>
+            <FluentGridFilter Property="@(p => p.Name)" 
+                              DataType="@FilterDataType.Text" 
+                              Placeholder="Search by name" 
+                              OnValueChanged="OnFilterChange" />
+        </ColumnOptions>
+    </PropertyColumn>
+    <PropertyColumn Property="@(p => p.TotalSales)" Title="Total Sales" Sortable="true" Format="N2" Align="Align.End">
+        <ColumnOptions>
+            <FluentGridFilter Property="@(p => p.TotalSales)" 
+                              DataType="@FilterDataType.Numeric" 
+                              Placeholder="Filter by sales" 
+                              OnValueChanged="OnFilterChange" />
+        </ColumnOptions>
+    </PropertyColumn>
+    <PropertyColumn Property="@(p => p.AccountCreatedDate)" Title="Account Created" Format="yyyy-MM-dd" Sortable="true">
+        <ColumnOptions>
+            <FluentGridFilter Property="@(p => p.AccountCreatedDate)" 
+                              DataType="@FilterDataType.DateTime" 
+                              Placeholder="Filter by date" 
+                              OnValueChanged="OnFilterChange" />
+        </ColumnOptions>
+    </PropertyColumn>
+</FluentDataGrid>
+```
+## Notes
+- **DataType:** Always specify the appropriate FilterDataType (e.g., Text, Numeric, DateTime).
+- **Placeholder and InputStyle:** These parameters help enhance usability and design consistency.
+- **OnValueChanged:** Ensure you handle filter changes to apply the filters to your grid.
+- **Validation:** The component automatically validates filter values and shows an error message if required fields are empty.
+- **Customization:** Adjust icons, styles, and placeholders to fit your application’s design.
+
+
